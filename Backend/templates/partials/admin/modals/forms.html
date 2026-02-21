@@ -1,0 +1,102 @@
+<div id="edit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm transition-opacity duration-300">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border border-gray-100 dark:border-gray-700 transform transition-all scale-100">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-700/50">
+            <h3 class="text-lg font-bold text-brand-dark dark:text-white flex items-center gap-2">
+                <i class="ph ph-pencil-simple text-brand-yellow"></i>
+                Edit Officer
+            </h3>
+            <button onclick="closeEditModal()" type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-white transition">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+        <div class="p-6 space-y-4">
+            <form id="edit-officer-form" onsubmit="event.preventDefault(); saveOfficerChanges();">
+                <input type="hidden" id="edit-original-username">
+                <div>
+                    <label class="block text-xs font-bold text-brand-muted dark:text-gray-400 uppercase tracking-wider mb-1">Officer Username</label>
+                    <input type="text" id="edit-username" disabled class="w-full px-4 py-2 bg-gray-100 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-500 cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-brand-muted dark:text-gray-400 uppercase tracking-wider mb-1">System Role</label>
+                    <select id="edit-role" class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent outline-none">
+                        <option value="officer">Standard Officer</option>
+                        <option value="admin">System Admin</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-brand-muted dark:text-gray-400 uppercase tracking-wider mb-1">Account Status</label>
+                    <select id="edit-status" class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent outline-none">
+                        <option value="true">Active (Can Login)</option>
+                        <option value="false">Suspended (Login Denied)</option>
+                    </select>
+                </div>
+                <div class="pt-2 border-t border-gray-100 dark:border-gray-700 mt-2">
+                    <label class="block text-xs font-bold text-brand-muted dark:text-gray-400 uppercase tracking-wider mb-1">Reset Password <span class="text-xs font-normal normal-case text-gray-400">(Leave blank to keep current)</span></label>
+                    <input type="password" id="edit-password" placeholder="Enter new password..." class="w-full px-4 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent outline-none">
+                </div>
+                <div class="mt-6 flex justify-end gap-3">
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-semibold bg-brand-dark dark:bg-brand-yellow text-white dark:text-black rounded-lg shadow-sm hover:shadow-md transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="student-edit-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 space-y-4">
+        <h3 class="text-xl font-bold text-brand-dark dark:text-white">Edit Student Details</h3>
+        <form id="student-edit-form" class="space-y-4">
+            <input type="hidden" id="edit-student-no-orig">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Student No.</label>
+                    <input type="text" id="edit-student-no" disabled class="w-full mt-1 px-3 py-2 bg-gray-100 dark:bg-gray-900/50 rounded-lg text-gray-500">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Program</label>
+                    <input type="text" id="edit-student-prog" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="col-span-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase">First Name</label>
+                    <input type="text" id="edit-student-fname" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                </div>
+                <div class="col-span-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Middle</label>
+                    <input type="text" id="edit-student-mname" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                </div>
+                <div class="col-span-1">
+                    <label class="text-xs font-bold text-gray-500 uppercase">Last Name</label>
+                    <input type="text" id="edit-student-lname" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Year Level</label>
+                    <select id="edit-student-year" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                        <option value="Alumni">Alumni</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase">Section</label>
+                    <input type="text" id="edit-student-section" class="w-full mt-1 px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-brand-dark dark:text-white">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-4">
+                <button type="button" onclick="document.getElementById('student-edit-modal').classList.add('hidden')" class="px-4 py-2.5 text-gray-700 dark:text-gray-300 font-semibold bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                    Cancel
+                </button>
+
+                <button type="button" onclick="saveStudentChanges()" class="px-5 py-2.5 bg-gray-900 dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-900 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" class="dark"> 
+{% include 'partials/officer/layout/head.html' %}
+
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-300">
+    
+    <div class="flex h-screen overflow-hidden">
+        
+        {% include 'partials/officer/layout/sidebar.html' %}
+
+        <main id="main-content" class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 relative">
+            
+            {% include 'partials/officer/layout/header.html' %}
+
+            <div class="px-8 pb-12">
+                {% include 'partials/officer/views/monitoring.html' %}
+                {% include 'partials/officer/views/events.html' %}
+                {% include 'partials/officer/views/students.html' %}
+                {% include 'partials/officer/views/sections.html' %}
+            </div>
+        </main>
+    </div>
+
+    {% include 'partials/officer/modals/inputs.html' %}
+    {% include 'partials/officer/modals/details.html' %}
+    {% include 'partials/officer/modals/alerts.html' %}
+
+   <script type="module" src="{{ url_for('static', filename='js/officer/dashboard.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<section id="users-view" class="space-y-8 animate-fade-in">
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+        
+        <div class="xl:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 transition-colors duration-300">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg text-brand-yellow">
+                    <i class="ph ph-user-plus text-xl"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Add New Officer</h3>
+            </div>
+            
+            <form id="create-officer-form" class="space-y-5">
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Username</label>
+                    <input type="text" id="new-username" required class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent transition-all outline-none placeholder-gray-400" placeholder="e.g., j.doe">
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Password</label>
+                    <input type="password" id="new-password" required class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent transition-all outline-none placeholder-gray-400" placeholder="••••••••">
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Role</label>
+                    <div class="relative">
+                        <select id="new-role" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow focus:border-transparent transition-all outline-none appearance-none">
+                            <option value="officer">Standard Officer</option>
+                            <option value="admin">System Admin</option>
+                        </select>
+                        <i class="ph ph-caret-down absolute right-4 top-3.5 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full bg-gray-900 dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-900 text-white font-semibold py-3.5 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg mt-4">
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <div class="xl:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 overflow-hidden transition-colors duration-300">
+            <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Registered Officers</h3>
+                <button onclick="loadOfficerList()" class="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition" title="Refresh List">
+                    <i class="ph ph-arrow-clockwise text-lg"></i>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full w-full text-left whitespace-nowrap">
+                    <thead class="bg-gray-50 dark:bg-gray-700/30 text-sm leading-6 font-semibold text-gray-500 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-4">Username</th>
+                            <th class="px-6 py-4">Role</th>
+                            <th class="px-6 py-4 text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="officers-table-body" class="divide-y divide-gray-100 dark:divide-gray-700/50">
+                        <tr><td colspan="3" class="px-6 py-8 text-center text-gray-500 dark:text-gray-500 animate-pulse">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

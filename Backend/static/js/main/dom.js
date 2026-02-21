@@ -1,0 +1,20 @@
+export const elements = {
+    themeToggleBtn: document.getElementById('theme-toggle'),
+    attendanceForm: document.getElementById('attendance-form'),
+    studentIdInput: document.getElementById('student-id'),
+    messageBox: document.getElementById('kiosk-message'),
+    attendanceListBody: document.getElementById('attendance-list'),
+    currentStudentDisplay: document.getElementById('current-student-display'),
+    studentNameDisplay: document.querySelector('#student-info-card p.text-3xl'),
+    studentDetailsDiv: document.getElementById('student-details'),
+    placeholderInfo: document.getElementById('placeholder-info'),
+    officerLoginButton: document.getElementById('officer-login-btn'),
+    officerModal: document.getElementById('officer-modal'),
+    closeModalButton: document.getElementById('close-modal-btn'),
+    officerLoginForm: document.getElementById('officer-login-form'),
+    officerMessage: document.getElementById('officer-message'),
+    officerUsernameInput: document.getElementById('officer-username'),
+    officerPasswordInput: document.getElementById('officer-password'),
+    attendanceLogTitle: document.getElementById('attendance-log-title'),
+    html: document.documentElement
+};

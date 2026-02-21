@@ -1,0 +1,42 @@
+<section id="events-view" class="space-y-4 hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 px-1 py-1">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Event Registry</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Manage upcoming school events and schedules.</p>
+        </div>
+        
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="relative group">
+                <i class="ph ph-funnel absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-yellow-500 transition-colors"></i>
+                <select id="event-list-filter" class="pl-9 pr-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm outline-none focus:border-yellow-500 transition-all cursor-pointer appearance-none text-gray-700 dark:text-gray-200 font-medium hover:border-yellow-400 shadow-sm">
+                    <option value="upcoming" selected>Upcoming Events</option>
+                    <option value="past">Past Events</option>
+                    <option value="all">All Events</option>
+                </select>
+            </div>
+
+            <button onclick="openEventModal()" class="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-white dark:text-gray-900 px-5 py-2.5 rounded-xl font-bold shadow-md shadow-yellow-500/20 transition-all transform active:scale-[0.98] text-sm whitespace-nowrap">
+                <i class="ph ph-plus-circle text-lg"></i>
+                <span>New Event</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50/50 dark:bg-gray-700/30 text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700">
+                        <th class="px-6 py-4 font-semibold w-24 text-center">ID</th>
+                        <th class="px-6 py-4 font-semibold">Event Name</th>
+                        <th class="px-6 py-4 font-semibold w-48">Date</th>
+                        <th class="px-6 py-4 font-semibold text-center w-40">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="events-table-body" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm text-gray-600 dark:text-gray-300">
+                    <tr><td colspan="4" class="px-6 py-8 text-center text-gray-400 italic">Loading events...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

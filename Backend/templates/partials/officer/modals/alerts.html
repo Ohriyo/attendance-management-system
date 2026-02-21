@@ -1,0 +1,169 @@
+<div id="success-modal" class="hidden fixed inset-0 z-50 flex justify-center items-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative z-10 border border-gray-200 dark:border-gray-700 transform scale-100 transition-all">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-100 dark:bg-green-900/30 mb-4 ring-4 ring-green-50 dark:ring-green-900/10">
+            <i class="ph ph-check text-3xl text-green-600 dark:text-green-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Success!</h3>
+        <p id="success-modal-message" class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">Operation completed successfully.</p>
+        <button id="success-modal-close-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition duration-200">
+            Continue
+        </button>
+    </div>
+</div>
+
+<div id="event-success-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative z-10 border border-gray-200 dark:border-gray-700">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-yellow-100 dark:bg-yellow-900/30 mb-4 ring-4 ring-yellow-50 dark:ring-yellow-900/10">
+            <i class="ph ph-calendar-check text-3xl text-yellow-600 dark:text-yellow-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Event Saved</h3>
+        <p id="event-modal-message" class="text-sm text-gray-500 dark:text-gray-400 mb-6">The event has been successfully updated.</p>
+        <button id="event-modal-close-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 rounded-xl transition duration-200">
+            Continue
+        </button>
+    </div>
+</div>
+
+<div id="section-success-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative z-10 border border-gray-200 dark:border-gray-700 transform scale-100 transition-all">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-100 dark:bg-green-900/30 mb-4 ring-4 ring-green-50 dark:ring-green-900/10">
+            <i class="ph ph-check-circle text-3xl text-green-600 dark:text-green-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Section Created!</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">The new class section has been successfully added to the system.</p>
+        <button id="section-success-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 shadow-lg shadow-green-600/20">
+            Continue
+        </button>
+    </div>
+</div>
+
+<div id="live-event-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative z-10 border border-gray-200 dark:border-gray-700">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-indigo-100 dark:bg-indigo-900/30 mb-4 ring-4 ring-indigo-50 dark:ring-indigo-900/10">
+            <i class="ph ph-broadcast text-3xl text-indigo-600 dark:text-indigo-400"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Event is Live!</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">This event is now active for student check-ins.</p>
+        <button id="live-event-modal-close-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl transition duration-200">
+            Okay, Got it
+        </button>
+    </div>
+</div>
+
+<div id="logout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeLogoutModal()"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm relative z-10 border border-gray-200 dark:border-gray-700 transform transition-all scale-100">
+        <div class="flex flex-col items-center text-center gap-4">
+            <div class="p-4 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 shadow-sm">
+                <i class="ph ph-sign-out text-4xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Sign Out?</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Are you sure you want to log out?
+                </p>
+            </div>
+            <div class="flex gap-3 w-full mt-2">
+                <button onclick="closeLogoutModal()" class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors text-sm">
+                    Cancel
+                </button>
+                <button id="confirm-logout-btn" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition-all text-sm">
+                    Yes, Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-section-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeDeleteSectionModal()"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm relative z-10 border border-gray-200 dark:border-gray-700 transform transition-all scale-100">
+        <div class="flex flex-col items-center text-center gap-4">
+            <div class="p-4 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 shadow-sm">
+                <i class="ph ph-warning-circle text-4xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Delete Section?</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    Are you sure you want to delete this section? This action cannot be undone and may remove associated student data.
+                </p>
+            </div>
+            <div class="flex gap-3 w-full mt-2">
+                <button onclick="closeDeleteSectionModal()" class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors text-sm">
+                    Cancel
+                </button>
+                <button onclick="executeSectionDelete()" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition-all text-sm">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-event-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="closeDeleteEventModal()"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm relative z-10 border border-gray-200 dark:border-gray-700 transform transition-all scale-100">
+        <div class="flex flex-col items-center text-center gap-4">
+            <div class="p-4 rounded-full bg-red-50 dark:bg-red-900/20 text-red-500 dark:text-red-400 shadow-sm">
+                <i class="ph ph-warning-circle text-4xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Delete Event?</h3>
+                <p id="delete-event-modal-message" class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                    This will permanently remove all associated attendance records.
+                </p>
+            </div>
+            <div class="flex gap-3 w-full mt-2">
+                <button onclick="closeDeleteEventModal()" class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors text-sm">
+                    Cancel
+                </button>
+                <button id="execute-delete-event-btn" class="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg shadow-red-600/20 transition-all text-sm">
+                    Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="delete-student-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100">
+        <div class="bg-red-50 dark:bg-red-900/20 p-6 flex flex-col items-center justify-center border-b border-red-100 dark:border-red-900/30">
+            <div class="p-3 bg-red-100 dark:bg-red-800/50 rounded-full mb-3 text-red-600 dark:text-red-400">
+                <i class="ph ph-warning-circle text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white text-center">Delete Student?</h3>
+        </div>
+        <div class="p-6">
+            <p id="delete-student-message" class="text-gray-600 dark:text-gray-300 text-center mb-6">
+                Are you sure you want to remove this student? This action cannot be undone.
+            </p>
+            <div class="flex gap-3 justify-center">
+                <button id="cancel-delete-student-btn" class="flex-1 px-5 py-2.5 rounded-xl font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    Cancel
+                </button>
+                <button id="confirm-delete-student-btn" class="flex-1 px-5 py-2.5 rounded-xl font-semibold text-white bg-red-600 hover:bg-red-700 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                    <i class="ph ph-trash"></i>
+                    <span>Yes, Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="section-error-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"></div>
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative z-10 border border-gray-200 dark:border-gray-700 transform scale-100 transition-all">
+        <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-red-100 dark:bg-red-900/30 mb-4 ring-4 ring-red-50 dark:ring-red-900/10">
+            <i class="ph ph-x-circle text-3xl text-red-600 dark:text-red-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Creation Failed</h3>
+        <p id="section-error-message" class="text-sm text-gray-500 dark:text-gray-400 mb-6">The section could not be created.</p>
+        <button id="section-error-btn" class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl transition duration-200 shadow-lg shadow-red-600/20">
+            Try Again
+        </button>
+    </div>
+</div>

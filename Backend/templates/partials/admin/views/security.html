@@ -1,0 +1,54 @@
+<section id="security-view" class="hidden animate-fade-in space-y-6">
+    
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700">
+        <h3 class="text-lg font-bold text-brand-dark dark:text-white mb-4 flex items-center gap-2">
+            <i class="ph ph-users text-brand-yellow"></i> Active Sessions
+        </h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 dark:bg-gray-700/50 text-brand-muted dark:text-gray-400">
+                    <tr>
+                        <th class="px-4 py-3 rounded-l-lg">User</th>
+                        <th class="px-4 py-3">Role</th>
+                        <th class="px-4 py-3">Logged In</th>
+                        <th class="px-4 py-3 rounded-r-lg text-right">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="sessions-table-body" class="divide-y divide-gray-100 dark:divide-gray-700/50">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-brand-dark dark:text-white">Database Backup</h3>
+                    <p class="text-sm text-brand-muted dark:text-gray-400 mt-1">Download a JSON copy of all system data.</p>
+                </div>
+                <div class="p-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-lg">
+                    <i class="ph ph-database text-xl"></i>
+                </div>
+            </div>
+            <button onclick="downloadBackup()" class="w-full py-3 border border-gray-200 dark:border-gray-600 text-brand-dark dark:text-white font-semibold rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition flex justify-center items-center gap-2">
+                <i class="ph ph-download-simple"></i> Download Backup
+            </button>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-soft border border-red-100 dark:border-red-900/30">
+            <div class="flex items-start justify-between mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-red-600 dark:text-red-400">Danger Zone</h3>
+                    <p class="text-sm text-brand-muted dark:text-gray-400 mt-1">Irreversible actions. Proceed with caution.</p>
+                </div>
+                <div class="p-2 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-lg">
+                    <i class="ph ph-warning text-xl"></i>
+                </div>
+            </div>
+            <button onclick="flushAttendance()" class="w-full py-3 bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 font-semibold rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition flex justify-center items-center gap-2">
+                <i class="ph ph-trash"></i> Flush Attendance Data
+            </button>
+        </div>
+    </div>
+</section>

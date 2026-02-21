@@ -1,0 +1,59 @@
+<aside id="sidebar" class="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col justify-between shadow-xl transition-all duration-300 z-20 relative">
+    
+    <div class="p-6">
+        <div class="flex items-center space-x-3 mb-10 px-2">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" class="h-10 w-10 object-contain rounded-full border border-yellow-500" onerror="this.onerror=null; this.src='https://placehold.co/48x48/6B7280/FFFFFF?text=NWSSU'">
+            <div>
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">Officer Panel</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">College of Computing and Information Sciences</p>
+            </div>
+        </div>
+
+        <nav class="space-y-6">
+            
+            <div>
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Attendance</p>
+                <a href="#" data-view="monitoring" class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white">
+                    <i class="ph ph-chart-line-up text-xl mr-3 text-gray-400 group-hover:text-yellow-500 transition-colors"></i>
+                    <span>Live Monitoring</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Management</p>
+                <a href="#" data-view="events" class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white mb-1">
+                    <i class="ph ph-calendar-check text-xl mr-3 text-gray-400 group-hover:text-yellow-500 transition-colors"></i>
+                    <span>Events & Schedule</span>
+                </a>
+                <a href="#" data-view="sections" class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white">
+                    <i class="ph ph-chalkboard-teacher text-xl mr-3 text-gray-400 group-hover:text-yellow-500 transition-colors"></i>
+                    <span>Class Sections</span>
+                </a>
+            </div>
+
+            <div>
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Records</p>
+                <a href="#" data-view="students" class="nav-item group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white">
+                    <i class="ph ph-users-three text-xl mr-3 text-gray-400 group-hover:text-yellow-500 transition-colors"></i>
+                    <span>Student Roster</span>
+                </a>
+            </div>
+
+        </nav>
+    </div>
+
+    <div class="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3 bg-gray-50/50 dark:bg-gray-800/50">
+        <button id="theme-toggle" class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:border-yellow-400 dark:hover:border-yellow-500 transition-colors group">
+            <span id="theme-toggle-text" class="text-xs font-medium">Switch Theme</span>
+            <div class="flex items-center">
+                <i id="theme-toggle-dark-icon" class="ph ph-moon text-lg hidden text-yellow-400"></i>
+                <i id="theme-toggle-light-icon" class="ph ph-sun text-lg hidden text-orange-400"></i>
+            </div>
+        </button>
+
+        <button id="logout-btn" class="w-full flex items-center justify-center space-x-2 px-4 py-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 font-medium hover:bg-red-100 dark:hover:bg-red-900/40 transition-colors">
+            <i class="ph ph-sign-out text-lg"></i>
+            <span class="text-sm">Sign Out</span>
+        </button>
+    </div>
+</aside>

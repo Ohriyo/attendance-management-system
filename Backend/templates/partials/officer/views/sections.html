@@ -1,0 +1,72 @@
+<section id="sections-view" class="space-y-4 hidden">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2 text-sm w-full sm:w-auto">
+            <button onclick="resetSectionView()" class="flex items-center gap-1 text-indigo-600 dark:text-indigo-400 font-bold hover:underline">
+                <i class="ph ph-folders text-lg"></i> CLASS SECTIONS
+            </button>
+            <div id="breadcrumb-container" class="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-medium"></div>
+        </div>
+
+        <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+            <button id="folder-back-btn" onclick="stepBackFolder()" class="hidden text-xs font-bold text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white uppercase flex items-center gap-1">
+                <i class="ph ph-arrow-u-up-left text-lg"></i> Back
+            </button>
+
+            <button onclick="openCreateSectionModal()" class="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-white dark:text-gray-900 px-4 py-2 rounded-xl font-bold shadow-md transition-all text-sm">
+                <i class="ph ph-plus-circle text-lg"></i>
+                <span>New Section</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="folder-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full animate-fade-in"></div>
+    
+    <div id="spreadsheet-view" class="hidden flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm rounded-2xl overflow-hidden transition-all">
+        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold uppercase tracking-wider rounded-lg border border-green-200 dark:border-green-800">
+                    <i class="ph ph-file-xls mr-1"></i> Attendance Sheet
+                </div>
+                <h3 id="sheet-title" class="font-bold text-gray-800 dark:text-gray-200 text-sm uppercase tracking-wide">Event Name</h3>
+            </div>
+            
+            <div class="flex gap-3 text-xs font-medium">
+                <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                    <span class="w-2 h-2 rounded-full bg-red-500"></span> Absent
+                </span>
+                <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                    <span class="w-2 h-2 rounded-full bg-gray-900 dark:bg-gray-100"></span> Present
+                </span>
+                <span class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+                    <span class="w-2 h-2 rounded-full bg-green-500"></span> Exempt
+                </span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="sticky top-0 z-20 shadow-sm">
+                    <tr class="bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-700">
+                        <th class="px-4 py-4 font-semibold text-center w-16 bg-gray-50 dark:bg-gray-800">No.</th>
+                        <th class="px-4 py-4 font-semibold w-48 bg-gray-50 dark:bg-gray-800">Last Name</th>
+                        <th class="px-4 py-4 font-semibold w-48 bg-gray-50 dark:bg-gray-800">First Name</th>
+                        <th class="px-2 py-4 font-semibold text-center w-28 text-orange-600 dark:text-orange-400 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700">AM (IN)</th>
+                        <th class="px-2 py-4 font-semibold text-center w-28 text-orange-600 dark:text-orange-400 bg-gray-50 dark:bg-gray-800">AM (OUT)</th>
+                        <th class="px-2 py-4 font-semibold text-center w-28 text-yellow-600 dark:text-yellow-400 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700">PM (IN)</th>
+                        <th class="px-2 py-4 font-semibold text-center w-28 text-yellow-600 dark:text-yellow-400 bg-gray-50 dark:bg-gray-800">PM (OUT)</th>
+                        <th class="px-4 py-4 font-semibold text-center w-32 bg-gray-50 dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="spreadsheet-body" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800"></tbody>
+            </table>
+        </div>
+
+        <div class="px-6 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50/30 dark:bg-gray-800/50">
+            <span id="sheet-count" class="text-xs text-gray-500 dark:text-gray-400">Loading records...</span>
+            <div class="flex space-x-2">
+                <button id="prev-sheet-btn" class="px-3 py-1 text-xs rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors">Prev</button>
+                <button id="next-sheet-btn" class="px-3 py-1 text-xs rounded-md bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 transition-colors">Next</button>
+            </div>
+        </div>
+    </div>
+</section>

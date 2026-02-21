@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* 1. CONFIGURATION & CUSTOM COLORS */
+:root {
+  --color-brand-dark: #111827;   /* gray-900 */
+  --color-brand-yellow: #FACC15; /* yellow-400 */
+}
+
+/* 2. BASE STYLES & OVERRIDES */
+@layer base {
+  /* --- Global Dark Backgrounds --- */
+  html.dark body {
+    background-color: var(--color-gray-900) !important;
+    color: var(--color-gray-100) !important;
+  }
+
+  html.dark #sidebar {
+    background-color: var(--color-gray-800) !important;
+    border-color: var(--color-gray-700) !important;
+  }
+
+  /* --- FORCE DARK MODE BACKGROUNDS --- */
+  html.dark .bg-white {
+    background-color: var(--color-gray-800) !important;
+    border-color: var(--color-gray-700) !important;
+    color: var(--color-gray-200) !important;
+  }
+
+  html.dark input, 
+  html.dark select, 
+  html.dark textarea {
+    background-color: var(--color-gray-900) !important;
+    border-color: var(--color-gray-600) !important;
+    color: var(--color-white) !important;
+  }
+
+  html.dark thead {
+    background-color: var(--color-gray-700) !important;
+  }
+  html.dark tbody tr {
+    border-color: var(--color-gray-700) !important;
+  }
+  html.dark td {
+    color: var(--color-gray-300) !important;
+  }
+
+  /* --- NEW: FORCE DARK MODE TEXT VISIBILITY --- */
+  /* Inverts dark text to light gray/white when in dark mode */
+  
+  /* Fixes "Attendance", "Welcome Student", and headers */
+  html.dark .text-brand-dark {
+    color: var(--color-gray-100) !important;
+  }
+
+  /* Fixes "Please enter ID", descriptions, and secondary text */
+  html.dark .text-gray-500,
+  html.dark .text-gray-600,
+  html.dark .text-gray-700,
+  html.dark .text-gray-800,
+  html.dark .text-gray-900 {
+    color: var(--color-gray-300) !important;
+  }
+
+  /* --- Fix Action Buttons --- */
+  html.dark .bg-orange-50 { 
+    background-color: rgba(67, 20, 7, 0.5) !important; 
+    color: var(--color-orange-400) !important; 
+    border: 1px solid var(--color-orange-900) !important;
+  }
+  html.dark .bg-red-50 { 
+    background-color: rgba(69, 10, 10, 0.5) !important; 
+    color: var(--color-red-400) !important;
+    border: 1px solid var(--color-red-900) !important;
+  }
+  html.dark .bg-blue-50 { 
+    background-color: rgba(23, 37, 84, 0.5) !important; 
+    color: var(--color-blue-400) !important;
+    border: 1px solid var(--color-blue-900) !important;
+  }
+}
+
+/* 3. CUSTOM UTILITIES */
+.nav-item-active {
+  background-color: var(--color-gray-100) !important;
+  color: var(--color-black) !important;
+  border: 1px solid var(--color-gray-200);
+}
+
+.dark .nav-item-active {
+  background-color: var(--color-gray-700) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-gray-600) !important;
+}
+
+.btn-loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.7;
+}

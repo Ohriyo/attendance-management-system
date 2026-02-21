@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+{% include 'partials/admin/layout/head.html' %}
+
+<body class="bg-brand-bg text-brand-dark dark:bg-gray-900 dark:text-gray-100 min-h-screen font-sans transition-colors duration-300 antialiased">
+    
+    <div class="flex h-screen overflow-hidden">
+        
+        {% include 'partials/admin/layout/sidebar.html' %}
+
+        <main class="flex-1 overflow-y-auto p-6 md:p-10 bg-brand-bg dark:bg-gray-900 transition-colors duration-300">  
+            
+            {% include 'partials/admin/layout/header.html' %}
+
+            {% include 'partials/admin/views/users.html' %}
+            {% include 'partials/admin/views/students.html' %}
+            {% include 'partials/admin/views/import.html' %}
+            {% include 'partials/admin/views/logs.html' %}
+            {% include 'partials/admin/views/security.html' %}
+            {% include 'partials/admin/views/settings.html' %}
+
+        </main>
+    </div>
+
+    {% include 'partials/admin/modals/forms.html' %}
+    {% include 'partials/admin/modals/alerts.html' %}
+
+    <script type="module" src="{{ url_for('static', filename='js/admin/admin.js') }}"></script>  
+</body>
+</html>

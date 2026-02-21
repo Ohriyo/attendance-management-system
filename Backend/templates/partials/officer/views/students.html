@@ -1,0 +1,74 @@
+<section id="students-view" class="space-y-4 hidden"> 
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 px-1 py-1">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Student Roster</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Manage registered students and attendance.</p>
+        </div>
+        
+        <button onclick="openStudentModal()" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-indigo-500/20 transition-all transform active:scale-[0.98] text-sm">
+            <i class="ph ph-plus-circle text-lg"></i>
+            <span>Add New Student</span>
+        </button>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/30 dark:bg-gray-800/50">
+            <h3 class="font-bold text-gray-800 dark:text-gray-200 text-xs uppercase tracking-widest">Registered Students</h3>
+            
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <div class="relative w-full sm:w-64">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="roster-search" placeholder="Search ID or Name..." 
+                        class="w-full pl-9 pr-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-500 transition-all">
+                </div>
+                
+                <select id="roster-filter-program" class="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-500 cursor-pointer dark:text-white">
+                    <option value="All">All Programs</option>
+                    <option value="BSCS">BSCS</option>
+                    <option value="BSIT">BSIT</option>
+                    <option value="BSIS">BSIS</option>
+                    <option value="BSEMC">BSEMC</option>
+                </select>
+                
+                <select id="roster-filter-year" class="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-500 cursor-pointer dark:text-white">
+                    <option value="All">All Years</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+
+                <select id="roster-filter-section" class="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-indigo-500 cursor-pointer dark:text-white">
+                    <option value="All">All Sections</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-[11px] text-gray-400 uppercase font-bold tracking-widest border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+                        <th class="px-6 py-4 w-12 text-center">#</th>
+                        <th class="px-6 py-4">Student No.</th>
+                        <th class="px-6 py-4">Name</th>
+                        <th class="px-6 py-4">Program</th>
+                        <th class="px-6 py-4">Year</th>
+                        <th class="px-6 py-4">Section</th>
+                        <th class="px-6 py-4 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="students-table-body" class="divide-y divide-gray-5 dark:divide-gray-700/50 text-sm text-gray-600 dark:text-gray-300">
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="px-6 py-3 border-t border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/20 dark:bg-gray-800/20">
+            <span id="roster-count" class="text-xs text-gray-500">Showing 0 students</span>
+            <div class="flex space-x-2">
+                <button id="prev-page-btn" disabled class="px-3 py-1 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-all">Prev</button>
+                <button id="next-page-btn" disabled class="px-3 py-1 text-xs rounded-lg border border-gray-200 dark:border-gray-700 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 transition-all">Next</button>
+            </div>
+        </div>
+    </div>
+</section>

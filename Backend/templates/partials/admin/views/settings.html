@@ -1,0 +1,72 @@
+<section id="settings-view" class="hidden animate-fade-in">
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                    <i class="ph ph-calendar-check text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Academic Period</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Set the active timeframe for attendance records.</p>
+                </div>
+            </div>
+
+            <form id="academic-settings-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Academic Year</label>
+                    <input type="text" name="academic_year" placeholder="e.g. 2025-2026" 
+                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow outline-none transition">
+                </div>
+
+                <div class="space-y-1">
+                    <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Current Semester</label>
+                    <div class="relative">
+                        <select name="semester" class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow outline-none appearance-none">
+                            <option value="1st Semester">1st Semester</option>
+                            <option value="2nd Semester">2nd Semester</option>
+                            <option value="Summer">Summer Term</option>
+                        </select>
+                        <i class="ph ph-caret-down absolute right-4 top-3 text-gray-400 pointer-events-none"></i>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700">
+            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg text-purple-600 dark:text-purple-400">
+                    <i class="ph ph-buildings text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Organization Details</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">Customize report headers and policies.</p>
+                </div>
+            </div>
+
+            <form id="org-settings-form" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Organization / College Name</label>
+                        <input type="text" name="org_name" placeholder="e.g. College of Computing and Information Sciences" 
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow outline-none transition">
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-sm font-semibold text-gray-900 dark:text-gray-300">Absence Fine (PHP)</label>
+                        <input type="number" name="absence_fine" placeholder="0.00" 
+                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-yellow outline-none transition">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="flex justify-end">
+            <button onclick="saveGlobalSettings()" class="flex items-center gap-2 px-8 py-3.5 bg-gray-900 dark:bg-black hover:bg-gray-800 dark:hover:bg-gray-900 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-md hover:shadow-lg">
+                <i class="ph ph-floppy-disk text-xl"></i>
+                Save Configuration
+            </button>
+        </div>
+
+    </div>
+</section>

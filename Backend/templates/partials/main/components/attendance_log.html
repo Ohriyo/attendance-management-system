@@ -1,0 +1,28 @@
+<div class="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-2xl border-2 border-gray-200 dark:border-gray-700 transition-colors duration-300">
+    <h3 id="attendance-log-title" class="text-xl font-semibold text-brand-dark dark:text-white mb-4 border-b pb-2 border-gray-100 dark:border-gray-700">
+        Live Attendance Log
+    </h3>
+    
+    <div class="max-h-80 overflow-y-auto overflow-x-auto rounded-lg custom-scrollbar">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 relative">
+            <thead class="sticky top-0 z-10">
+                <tr class="text-xs font-medium text-black dark:text-gray-400 uppercase tracking-wider bg-gray-50 dark:bg-gray-700">
+                    <th class="px-3 py-3 text-center">No.</th>
+                    <th class="px-3 py-3 text-left">Student No.</th>
+                    <th class="px-3 py-3 text-left">Last Name</th>
+                    <th class="px-3 py-3 text-left">First Name</th>
+                    <th class="px-3 py-3 text-left hidden sm:table-cell">Middle Name</th>
+                    <th class="px-3 py-3 text-left hidden md:table-cell">Program</th>
+                    <th class="px-3 py-3 text-left hidden md:table-cell">Year</th>
+                    <th class="px-3 py-3 text-left hidden lg:table-cell">Section</th>
+                    <th class="px-3 py-3 text-left hidden sm:table-cell">Date</th>
+                    <th class="px-3 py-3 text-left">Time In</th>   
+                    <th class="px-3 py-3 text-left">Time Out</th>
+                </tr>
+            </thead>
+            <tbody id="attendance-list" class="divide-y divide-gray-200 dark:divide-gray-700 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800">
+                <tr><td colspan="10" class="px-6 py-4 text-sm text-gray-500 text-center">Loading attendance log...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>

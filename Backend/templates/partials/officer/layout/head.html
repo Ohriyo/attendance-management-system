@@ -1,0 +1,38 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSC-CCIS| Officer Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script>
+    tailwind.config = {
+        darkMode: 'class', 
+        theme: {
+            extend: {
+                colors: {
+                    'nwsus-yellow': '#FACC15',
+                    'nwsus-dark': '#1F2937',
+                },
+                fontFamily: {
+                    sans: ['Inter', 'sans-serif'],
+                }
+            }
+        }
+    }
+        
+    if (localStorage.getItem('color-theme') === 'light') {
+        document.documentElement.classList.remove('dark')
+    } else {
+        document.documentElement.classList.add('dark');
+    }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #4B5563; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+        .sortable-header { cursor: pointer; user-select: none; }
+        .sortable-header:hover { color: #FACC15; }
+    </style>
+</head>

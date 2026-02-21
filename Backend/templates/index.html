@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCIS | Attendance Kiosk</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    </head>
+
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col font-sans transition-colors duration-300">
+
+    {% include 'partials/main/layout/header.html' %}
+
+    <main class="flex-grow p-4 md:p-8 max-w-7xl mx-auto w-full">
+        
+        {% include 'partials/main/components/status_alert.html' %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {% include 'partials/main/components/kiosk_form.html' %}
+            {% include 'partials/main/components/student_card.html' %}
+        </div>
+
+        {% include 'partials/main/components/attendance_log.html' %}
+
+    </main>
+
+    {% include 'partials/main/layout/footer.html' %}
+    {% include 'partials/main/modals/officer_login.html' %}
+
+    <script type="module" src="{{ url_for('static', filename='/js/main/main.js') }}"></script>
+</body>
+</html>

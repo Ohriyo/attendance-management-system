@@ -1,0 +1,10 @@
+.env
+secret.key
+__pycache__/
+*.db
+venv/
+.venv/
+*.pyc
+instance/
+.vercel
+node_modules/

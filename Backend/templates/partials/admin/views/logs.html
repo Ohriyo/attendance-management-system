@@ -1,0 +1,30 @@
+<section id="logs-view" class="hidden animate-fade-in flex flex-col h-full">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-soft border border-gray-100 dark:border-gray-700 overflow-hidden flex-1 flex flex-col">
+        
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
+            <div>
+                <h3 class="text-lg font-bold text-brand-dark dark:text-white">Audit Logs</h3>
+                <p class="text-xs text-brand-muted dark:text-gray-400 mt-1">Chronological history of system events.</p>
+            </div>
+            
+            <button onclick="loadAuditLogs()" class="p-2 text-brand-muted hover:text-brand-dark dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition" title="Refresh Logs">
+                <i class="ph ph-arrow-clockwise text-lg"></i>
+            </button>
+        </div>
+
+        <div class="overflow-y-auto flex-1 custom-scrollbar">
+            <table class="min-w-full text-left">
+                <thead class="sticky top-0 bg-gray-50 dark:bg-gray-700/30 text-xs uppercase font-bold text-brand-muted dark:text-gray-400 tracking-wider backdrop-blur-sm z-10">
+                    <tr>
+                        <th class="px-6 py-4 w-48">Timestamp</th>
+                        <th class="px-6 py-4 w-48">Actor</th>
+                        <th class="px-6 py-4 w-40">Action</th>
+                        <th class="px-6 py-4 w-auto">Details</th>
+                    </tr>
+                </thead>
+                <tbody id="logs-table-body" class="divide-y divide-gray-100 dark:divide-gray-700/50 text-sm">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</section>
