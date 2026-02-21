@@ -141,6 +141,6 @@ def init_db(app):
              cursor.execute("INSERT INTO officers (username, password_hash, role) VALUES (%s, %s, %s)", 
                             ('admin', hashed_admin_pw, 'admin'))
 
-        db.commit()
+        db.commit() 
         cursor.close()
         print("PostgreSQL Database initialized.")
