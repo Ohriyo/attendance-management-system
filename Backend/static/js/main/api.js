@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL } from './main/config.js';
 
 export async function fetchActiveEvent() {
     return await fetch(`${API_BASE_URL}/active_event`);

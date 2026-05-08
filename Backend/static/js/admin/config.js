@@ -1,1 +1,1 @@
-export const API_BASE_URL = 'https://attendance-management-system-gflw.onrender.com/';
+export const API_BASE_URL = 'https://attendance-management-system-gflw.onrender.com';

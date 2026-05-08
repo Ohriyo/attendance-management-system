@@ -1,5 +1,4 @@
-import { API_BASE_URL } from './config.js';
-
+import { API_BASE_URL } from './officer/config.js';
 // --- Session ---
 export const checkSession = async (payload) => 
     fetch(`${API_BASE_URL}/check_session`, {
