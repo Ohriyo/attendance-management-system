@@ -25,8 +25,7 @@
     {% include 'partials/officer/modals/details.html' %}
     {% include 'partials/officer/modals/alerts.html' %}
 
-    <script type="module" src="/static/js/officer/config.js"></script>
-    <script type="module" src="/static/js/officer/api.js"></script>
-     <script type="module" src="/static/js/officer/dashboard.js"></script>
+
+    <script type="module" src="{{ url_for('static', filename='js/officer/dashboard.js') }}?v=update1"></script>
 </body>
 </html>

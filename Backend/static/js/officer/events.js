@@ -124,8 +124,7 @@ export async function handleEventFormSubmit(e) {
     submitBtn.textContent = currentEditingEventId ? 'Updating...' : 'Creating...';
 
     const method = currentEditingEventId ? 'PUT' : 'POST';
-    const url = currentEditingEventId ? `${API_BASE_URL}/events/${currentEditingEventId}` : `${API_BASE_URL}/events`;
-    
+    const url = currentEditingEventId ? `${API_BASE_URL}/api/events/${currentEditingEventId}` : `${API_BASE_URL}/api/events`;    
     try {
         const response = await API.saveEvent(url, method, { name, date });
         const result = await response.json();
