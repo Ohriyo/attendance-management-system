@@ -1,4 +1,4 @@
-import { API_BASE_URL } from './admin/config.js';
+import { API_BASE_URL } from './config.js';
 
 // Generic Fetch Wrapper
 const apiFetch = async (endpoint, options = {}) => {
