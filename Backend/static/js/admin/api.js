@@ -1,5 +1,4 @@
 import { API_BASE_URL } from './config.js';
-
 // Generic Fetch Wrapper
 const apiFetch = async (endpoint, options = {}) => {
     return fetch(`${API_BASE_URL}${endpoint}`, options);

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './config.js';
+
 // --- Session ---
 export const checkSession = async (payload) => 
     fetch(`${API_BASE_URL}/check_session`, {
