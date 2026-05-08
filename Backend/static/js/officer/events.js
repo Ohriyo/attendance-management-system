@@ -1,6 +1,6 @@
 import { showAlert } from '../admin/ui.js';
 import * as API from './api.js';
-import { API_BASE_URL } from './officer/config.js';
+import { API_BASE_URL } from './config.js';
 import { loadMonitoringView } from './monitoring.js';
 
 let cachedEvents = []; 
