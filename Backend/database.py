@@ -172,6 +172,6 @@ def init_db(app):
             EXECUTE FUNCTION cascade_soft_delete_event();
         """)
 
-        db.commit()
+        db.commit() 
         cursor.close()
         print("PostgreSQL Database initialized.")

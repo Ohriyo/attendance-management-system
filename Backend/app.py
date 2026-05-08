@@ -1,8 +1,12 @@
 import os
 from flask import Flask, render_template
 from flask_cors import CORS
-from database import init_db, close_connection
 from dotenv import load_dotenv
+
+# Import the database functions properly
+from database import init_db, close_connection 
+
+# Import blueprints using absolute paths for Vercel
 from routes.auth import auth_bp
 from routes.admin import admin_bp
 from routes.students import students_bp
@@ -12,6 +16,7 @@ from flask import redirect, url_for
 
 load_dotenv()
 app = Flask(__name__)
+# Vercel needs this 'app' variable to be exposed
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 CORS(app, resources={r"/*": {
