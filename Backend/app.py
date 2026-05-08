@@ -19,8 +19,9 @@ app = Flask(__name__)
 # Vercel needs this 'app' variable to be exposed
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
+# Updated for Production on Render
 CORS(app, resources={r"/*": {
-    "origins": ["http://127.0.0.1:5501", "http://localhost:5501", "http://127.0.0.1:5000"],
+    "origins": ["https://attendance-management-system-gflw.onrender.com"],
     "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"]
 }}, supports_credentials=True)
