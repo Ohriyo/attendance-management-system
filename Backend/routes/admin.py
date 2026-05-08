@@ -75,7 +75,6 @@ def backup_database():
     tables = ['students', 'attendance', 'events', 'officers', 'settings', 'sections']
     backup_data = {}
     for table in tables:
-        # Note: Be careful with f-strings in queries; only use them for trusted table names
         cursor.execute(f"SELECT * FROM {table}")
         rows = cursor.fetchall()
         backup_data[table] = [dict(row) for row in rows]
@@ -98,9 +97,7 @@ def flush_data():
     actor = data.get('username', 'admin')
     
     try:
-        # Wipes data and resets the SERIAL counter in one go
         cursor.execute("TRUNCATE TABLE attendance RESTART IDENTITY CASCADE")
-
         log_action(actor, 'FLUSH_DATA', 'Wiped all attendance records.')
         db.commit()
         return jsonify({'message': 'All attendance records have been wiped.'}), 200
@@ -142,7 +139,7 @@ def revoke_session():
         return jsonify({'message': str(e)}), 500
     finally:
         cursor.close()
-# Add this to your admin.py
+
 @admin_bp.route('/api/admin/officers/<username>', methods=['PUT'])
 def update_officer(username):
     data = request.get_json()
@@ -154,7 +151,7 @@ def update_officer(username):
     cursor = db.cursor()
 
     try:
-        if password: # If a new password was provided in the edit modal
+        if password: 
             from werkzeug.security import generate_password_hash
             hashed_pw = generate_password_hash(password)
             cursor.execute("UPDATE officers SET role=%s, is_active=%s, password_hash=%s WHERE username=%s", 
@@ -168,5 +165,37 @@ def update_officer(username):
     except Exception as e:
         db.rollback()
         return jsonify({"message": str(e)}), 500
+    finally:
+        cursor.close()
+
+@admin_bp.route('/api/admin/events/archived', methods=['GET'])
+def get_archived_events():
+    db = get_db_connection()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM events WHERE deleted_at IS NOT NULL ORDER BY deleted_at DESC")
+    archived_events = cursor.fetchall()
+    cursor.close()
+    return jsonify([dict(row) for row in archived_events]), 200
+
+@admin_bp.route('/api/admin/events/<int:event_id>/recover', methods=['POST'])
+def recover_event(event_id):
+    data = request.get_json(silent=True) or {}
+    actor = data.get('username', 'Admin')
+
+    db = get_db_connection()
+    cursor = db.cursor()
+    try:
+        cursor.execute("UPDATE events SET deleted_at = NULL WHERE id = %s", (event_id,))
+        
+        cursor.execute("SELECT name FROM events WHERE id = %s", (event_id,))
+        event = cursor.fetchone()
+        event_name = event['name'] if event else f"ID {event_id}"
+        log_action(actor, 'RECOVER_EVENT', f"Recovered event: {event_name}")
+        
+        db.commit()
+        return jsonify({'message': 'Event and associated attendance recovered successfully.'}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({'message': str(e)}), 500
     finally:
         cursor.close()

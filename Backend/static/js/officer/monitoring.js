@@ -134,6 +134,7 @@ function renderAttendanceTable(log) {
         const row = document.createElement('tr');
         row.className = 'border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150';
         const fullName = `${entry.last_name}, ${entry.first_name} ${entry.middle_name || ''}`;
+        
         row.innerHTML = `
             <td class="px-6 py-4 text-sm text-center font-medium text-gray-500 dark:text-gray-400">${index + 1}</td>
             <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white">${entry.student_no}</td>
@@ -142,8 +143,8 @@ function renderAttendanceTable(log) {
             <td class="px-6 py-4 text-left hidden sm:table-cell text-sm text-gray-600 dark:text-gray-300">${entry.year_level}</td>
             <td class="px-6 py-4 text-left hidden sm:table-cell text-sm text-gray-600 dark:text-gray-300">${entry.section}</td>
             <td class="px-6 py-4 text-left hidden lg:table-cell text-sm text-gray-600 dark:text-gray-300">${entry.date}</td>
-            <td class="px-6 py-4 text-sm font-mono text-center text-green-600 dark:text-green-400">${entry.time_in}</td>
-            <td class="px-6 py-4 text-sm font-mono text-center text-red-600 dark:text-red-400">${entry.time_out}</td>
+            <td class="px-6 py-4 text-sm font-mono text-center text-green-600 dark:text-green-400">${formatTo12Hour(entry.time_in)}</td>
+            <td class="px-6 py-4 text-sm font-mono text-center text-red-600 dark:text-red-400">${formatTo12Hour(entry.time_out)}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -196,4 +197,21 @@ function showLiveEventModal() {
     const newBtn = closeBtn.cloneNode(true);
     closeBtn.parentNode.replaceChild(newBtn, closeBtn);
     newBtn.addEventListener('click', () => modal.classList.add('hidden'));
+}
+
+function formatTo12Hour(timestampString) {
+    // Catch actual nulls, undefined, empty strings, and the literal word "null"
+    if (!timestampString || String(timestampString).trim() === "null") {
+        return "---"; 
+    }
+
+    const dateObj = new Date(timestampString);
+    if (isNaN(dateObj.getTime())) return "---";
+
+    return dateObj.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Manila' 
+    });
 }

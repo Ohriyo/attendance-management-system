@@ -1,3 +1,4 @@
+import { showAlert } from '../admin/ui.js';
 import * as API from './api.js';
 import { API_BASE_URL } from './config.js';
 import { loadMonitoringView } from './monitoring.js';
@@ -115,7 +116,9 @@ export async function handleEventFormSubmit(e) {
     const date = document.getElementById('event-date').value;
     const submitBtn = document.getElementById('event-form-submit-btn');
     
-    if (!name || !date) { alert('Please fill out all required fields.'); return; }
+    if (!name || !date) { 
+        showAlert('Missing Information', 'Please provide both an event name and date.', 'warning');
+         return; }
     
     submitBtn.disabled = true;
     submitBtn.textContent = currentEditingEventId ? 'Updating...' : 'Creating...';
@@ -133,9 +136,12 @@ export async function handleEventFormSubmit(e) {
             fetchAndRenderEvents(); 
             loadMonitoringView(); 
         } else {
-            alert(`Error: ${result.message}`);
+            showAlert('Error', result.message || 'An error occurred while saving the event.', 'error');
         }
-    } catch (error) { console.error(error); } 
+    } catch (error) { 
+        console.error(error);
+        showAlert('Network Error', 'Could not connect to the server.', 'error');
+     } 
     finally {
         submitBtn.disabled = false;
         submitBtn.textContent = currentEditingEventId ? 'Update Event' : 'Create New Event';
@@ -163,7 +169,12 @@ export async function executeEventDelete() {
         btn.disabled = true;
         btn.innerHTML = '<i class="ph ph-spinner animate-spin"></i> Deleting...';
 
-        const response = await API.deleteEvent(eventIdToDelete);
+        // 1. Grab the currently logged-in user's username from localStorage
+        const user = JSON.parse(localStorage.getItem('user_info'));
+        const username = user ? user.username : 'Admin';
+
+        // 2. Pass the username in the payload to the API
+        const response = await API.deleteEvent(eventIdToDelete, { username: username });
 
         if (response.ok) {
             closeDeleteEventModal();
@@ -171,7 +182,7 @@ export async function executeEventDelete() {
             loadMonitoringView();   // Refresh dropdown
         } else {
             const result = await response.json();
-            alert(`Error: ${result.message}`);
+            showAlert('Delete Failed', result.message || 'Could not delete the event.', 'error');
         }
     } catch (error) {
         console.error('Delete error:', error);

@@ -3,7 +3,7 @@ import { showAlert, showConfirm } from './ui.js';
 
 export function forceLogout() {
     localStorage.clear();
-    window.location.replace('index.html');
+    window.location.replace('/');
 }
 
 export async function validateSession() {

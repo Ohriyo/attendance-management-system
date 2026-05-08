@@ -12,7 +12,7 @@ def login():
     username = data.get('username')
     password = data.get('password') 
     db = get_db_connection()
-    cursor = db.cursor() # Get a cursor for Postgres execution
+    cursor = db.cursor() 
     
     # Updated: Changed '?' to '%s'
     cursor.execute("SELECT * FROM officers WHERE username = %s", (username,))
@@ -64,22 +64,21 @@ def change_own_password():
     db = get_db_connection()
     cursor = db.cursor()
 
-    # 1. Verify session token first (matching your current auth style)
     cursor.execute("SELECT * FROM officers WHERE username = %s AND session_token = %s", (username, token))
     user = cursor.fetchone()
 
     if not user:
         return jsonify({'message': 'Unauthorized session'}), 401
 
-    # 2. Verify current password before allowing change
+    # Verify current password before allowing change
     if not check_password_hash(user['password_hash'], current_pw):
         return jsonify({'message': 'Current password incorrect'}), 403
 
-    # 3. Hash new password and update
+    # Hash new password and update
     hashed_new = generate_password_hash(new_pw)
     cursor.execute("UPDATE officers SET password_hash = %s WHERE username = %s", (hashed_new, username))
     
-    # 4. Log the action in your audit_logs table
+    # Log the action in your audit_logs table
     cursor.execute("INSERT INTO audit_logs (actor_username, action, details) VALUES (%s, %s, %s)", 
                    (username, 'UPDATE_PASSWORD', f'User {username} changed their own password.'))
     

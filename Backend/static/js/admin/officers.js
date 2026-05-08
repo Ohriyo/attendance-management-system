@@ -86,7 +86,10 @@ export function setupCreateOfficerForm() {
 
             [usernameInput, passwordInput].forEach(input => input.classList.remove('border-red-500'));
 
-            if (!usernameInput.value.trim()) { usernameInput.classList.add('border-red-500'); return; }
+            if (!usernameInput.value.trim() || !passwordInput.value) { 
+                showAlert('Missing Info', 'Please fill in all required fields.', 'warning');
+                return;
+            }
             if (!passwordInput.value) { passwordInput.classList.add('border-red-500'); return; }
 
             const userData = {

@@ -19,6 +19,7 @@ export async function loadGlobalSettings() {
 
     } catch (error) {
         console.error("Error loading settings:", error);
+        showAlert('System Error', 'An unexpected error occurred while loading settings.', 'error');
     }
 }
 

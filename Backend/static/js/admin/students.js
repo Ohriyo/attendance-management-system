@@ -14,6 +14,7 @@ export async function loadStudentList() {
     } catch (e) {
         console.error(e);
         tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Failed to load roster.</td></tr>';
+        showAlert('Loading Failed', 'Could not retrieve the student list from the server.', 'error');
     }
 }
 
@@ -109,7 +110,10 @@ export async function saveStudentChanges() {
         } else {
             showAlert('Error', 'Update failed.', 'error');
         }
-    } catch(e) { console.error(e); }
+    } catch(e) { 
+        console.error(e); 
+        showAlert('Error', 'An unexpected error occurred.', 'error');
+    }
 }
 
 // Promotions & Demotions

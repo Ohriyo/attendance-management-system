@@ -30,7 +30,7 @@ def init_db(app):
         db = get_db_connection()
         cursor = db.cursor()
         
-        # --- Tables (Updated for PostgreSQL Syntax) ---
+        # Tables
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS students (
                 student_no TEXT PRIMARY KEY,
@@ -57,7 +57,10 @@ def init_db(app):
                 id SERIAL PRIMARY KEY,
                 event_id INTEGER NOT NULL REFERENCES events(id),
                 student_no TEXT NOT NULL REFERENCES students(student_no),
-                am_in TEXT, am_out TEXT, pm_in TEXT, pm_out TEXT,
+                am_in TIMESTAMPTZ, 
+                am_out TIMESTAMPTZ, 
+                pm_in TIMESTAMPTZ, 
+                pm_out TIMESTAMPTZ,
                 status TEXT DEFAULT 'Absent'
             );
         """)
@@ -140,6 +143,34 @@ def init_db(app):
              hashed_admin_pw = generate_password_hash(env_admin_pw)
              cursor.execute("INSERT INTO officers (username, password_hash, role) VALUES (%s, %s, %s)", 
                             ('admin', hashed_admin_pw, 'admin'))
+             
+    # Soft Delete Schema Updates 
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ DEFAULT NULL;")
+        cursor.execute("ALTER TABLE attendance ADD COLUMN IF NOT EXISTS deleted_at TIMESTAMPTZ DEFAULT NULL;")
+
+        # Create the cascade function
+        cursor.execute("""
+            CREATE OR REPLACE FUNCTION cascade_soft_delete_event()
+            RETURNS TRIGGER AS $$
+            BEGIN
+                IF NEW.deleted_at IS NOT NULL AND OLD.deleted_at IS NULL THEN
+                    UPDATE attendance SET deleted_at = NEW.deleted_at WHERE event_id = NEW.id;
+                ELSIF NEW.deleted_at IS NULL AND OLD.deleted_at IS NOT NULL THEN
+                    UPDATE attendance SET deleted_at = NULL WHERE event_id = NEW.id;
+                END IF;
+                RETURN NEW;
+            END;
+            $$ LANGUAGE plpgsql;
+        """)
+
+        # Attach the trigger
+        cursor.execute("""
+            DROP TRIGGER IF EXISTS trigger_cascade_soft_delete ON events;
+            CREATE TRIGGER trigger_cascade_soft_delete
+            AFTER UPDATE OF deleted_at ON events
+            FOR EACH ROW
+            EXECUTE FUNCTION cascade_soft_delete_event();
+        """)
 
         db.commit()
         cursor.close()

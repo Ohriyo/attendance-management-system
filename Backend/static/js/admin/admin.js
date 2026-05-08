@@ -5,8 +5,7 @@ import { loadOfficerList, deleteOfficer, setupCreateOfficerForm, openEditModal, 
 import { loadStudentList, setupStudentSearch, openStudentEdit, saveStudentChanges, confirmPromotion, confirmDemotion, checkDuplicates, toggleSelectAll } from './students.js';
 import { setupFileInputListener, clearFile, handleCSVUpload } from './import.js';
 import { loadGlobalSettings, saveGlobalSettings } from './settings.js';
-import { downloadBackup, flushAttendance } from './maintenance.js';
-import { loadAuditLogs } from './logs.js';
+import { downloadBackup, flushAttendance, loadArchivedEvents, recoverEvent } from './maintenance.js';import { loadAuditLogs } from './logs.js';
 
 // --- Expose Globals for HTML onclick attributes ---
 window.closeStatusModal = closeStatusModal;
@@ -27,6 +26,7 @@ window.revokeSession = revokeSession;
 window.confirmDemotion = confirmDemotion;
 window.toggleSelectAll = toggleSelectAll;
 window.updateMyPassword = updateMyPassword;
+window.recoverEvent = recoverEvent;
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', async () => {
@@ -89,7 +89,10 @@ function setupAdminNav() {
             if (viewId === 'settings') loadGlobalSettings();
             if (viewId === 'students') loadStudentList();
             if (viewId === 'logs') loadAuditLogs();
-            if (viewId === 'security') loadActiveSessions();
+            if (viewId === 'security') {
+                loadActiveSessions();
+                loadArchivedEvents(); 
+            }
         });
     });
 
@@ -97,7 +100,6 @@ function setupAdminNav() {
         navLinks[0].classList.add(activeClass);
     }
 
-    // --- UPDATED SAFE LOGOUT LOGIC ---
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
@@ -120,8 +122,8 @@ function startSessionCheck() {
             try {
                 const res = await api.checkSession({ token: token, username: user.username });
                 if (res.status === 401) {
-                    alert("Your session has expired or was revoked by an admin.");
-                    forceLogout();
+                    showAlert('Session Revoked', 'Your session has been revoked by the administrator.', 'error');
+                    setTimeout(() => forceLogout(), 2000);
                 }
             } catch(e) {}
         }

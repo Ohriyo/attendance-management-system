@@ -37,7 +37,7 @@ export function startSessionCheckInterval() {
                 });
     
                 if (response.status === 401) {
-                    alert("Your session has been revoked by the administrator.");
+                    showAlert('Session Revoked', 'Your session has been revoked by the administrator.', 'error');
                     localStorage.clear();
                     window.location.href = 'index.html';
                 }

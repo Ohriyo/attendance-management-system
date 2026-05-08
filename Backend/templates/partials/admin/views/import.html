@@ -69,14 +69,29 @@
                             <i class="ph ph-x"></i>
                         </button>
                     </div>
-
-                    <div id="upload-feedback" class="hidden p-4 rounded-xl text-sm font-medium text-center"></div>
+    
+                    <div id="upload-feedback" class="hidden flex-col items-center p-6 rounded-xl border animate-fade-in w-full">
+                        <div id="status-icon" class="mb-3 text-brand-yellow">
+                            </div>
+                        
+                        <p id="status-text" class="text-base font-bold text-brand-dark dark:text-white mb-1"></p>
+                        <p id="status-detail" class="text-xs text-gray-500 dark:text-gray-400 mb-4 text-center"></p>
+                        
+                        <div id="progress-wrapper" class="w-full hidden">
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-1 overflow-hidden">
+                                <div id="progress-bar" class="bg-brand-yellow h-2 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+                            </div>
+                            <div class="flex justify-between w-full text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <span id="progress-count">0 / 0 rows</span>
+                                <span id="progress-percent">0%</span>
+                            </div>
+                        </div>
+                    </div>
 
                     <button id="upload-btn" onclick="handleCSVUpload()" disabled class="w-full py-3 px-4 rounded-xl bg-gray-200 dark:bg-gray-700 text-gray-400 font-bold cursor-not-allowed transition-all duration-200 shadow-none flex justify-center items-center gap-2">
                         <span>Process Import</span>
                     </button>
                 </div>
-            </div>
 
         </div>
     </div>

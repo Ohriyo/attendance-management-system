@@ -8,6 +8,7 @@ from routes.admin import admin_bp
 from routes.students import students_bp
 from routes.events import events_bp
 from routes.attendance import attendance_bp
+from flask import redirect, url_for
 
 load_dotenv()
 app = Flask(__name__)
@@ -28,8 +29,8 @@ app.register_blueprint(students_bp)
 app.register_blueprint(events_bp)
 app.register_blueprint(attendance_bp)
 
-@app.route('/index.html')
-def index():
+@app.route('/')
+def root():
     return render_template('index.html')
 
 @app.route('/officer_dashboard.html')

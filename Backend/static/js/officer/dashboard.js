@@ -1,6 +1,5 @@
 import { validateSession, startSessionCheckInterval } from './auth.js';
-import { setupNavigation, setupThemeToggle } from './ui.js';
-import { loadMonitoringView } from './monitoring.js';
+import { setupNavigation, setupThemeToggle, closeLogoutModal } from './ui.js';import { loadMonitoringView } from './monitoring.js';
 
 // Import functions that need to be exposed to window for HTML onclick events
 import { 
@@ -43,6 +42,7 @@ window.deleteEvent = deleteEvent;
 window.closeDeleteEventModal = closeDeleteEventModal;
 window.openEventModal = openEventModal;
 window.closeEventModal = closeEventModal;
+window.closeLogoutModal = closeLogoutModal;
 
 window.onpageshow = function(event) {
     if (event.persisted) {

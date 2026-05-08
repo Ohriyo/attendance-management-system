@@ -70,7 +70,6 @@ export function setupNavigation() {
     const monitoringLink = document.querySelector('[data-view="monitoring"]');
     if (monitoringLink) monitoringLink.click();
 
-    // UPDATED LOGOUT LOGIC START
     document.getElementById('logout-btn').addEventListener('click', () => {
         document.getElementById('logout-modal').classList.remove('hidden');
     });
@@ -78,5 +77,13 @@ export function setupNavigation() {
     document.getElementById('confirm-logout-btn').addEventListener('click', () => {
         forceLogout();
     });
-    // UPDATED LOGOUT LOGIC END
 }
+
+export function closeLogoutModal() {
+    const logoutModal = document.getElementById('logout-modal');
+    if (logoutModal) {
+        logoutModal.classList.add('hidden');
+    }
+}
+
+window.closeLogoutModal = closeLogoutModal;

@@ -7,11 +7,11 @@ events_bp = Blueprint('events', __name__)
 @events_bp.route('/api/events', methods=['GET', 'POST'])
 def manage_events():
     db = get_db_connection()
-    cursor = db.cursor() # Get cursor for PostgreSQL
+    cursor = db.cursor() 
     
     if request.method == 'GET':
-        # Updated: Changed table query for Postgres cursor execution
-        cursor.execute("SELECT * FROM events ORDER BY date DESC")
+        # ONLY fetch events where deleted_at IS NULL
+        cursor.execute("SELECT * FROM events WHERE deleted_at IS NULL ORDER BY date DESC")
         events = cursor.fetchall()
         cursor.close()
         return jsonify([dict(row) for row in events]), 200
@@ -55,7 +55,6 @@ def active_event():
         cursor.close()
         return jsonify({'message': 'Active event updated.'}), 200
     
-    # Updated: SQLite execute() replaced with Postgres cursor.execute()
     cursor.execute("SELECT value FROM settings WHERE key = 'active_event_id'")
     setting = cursor.fetchone()
     
@@ -69,8 +68,6 @@ def active_event():
     cursor.close()
     
     return jsonify(dict(event)) if event else ({'message': 'Event not found'}, 404)
-
-# Add these routes to your existing events.py file
 
 @events_bp.route('/api/events/<int:event_id>', methods=['PUT', 'DELETE'])
 def modify_event(event_id):
@@ -104,17 +101,16 @@ def modify_event(event_id):
 
     if request.method == 'DELETE':
         try:
-            # First, fetch the name for the audit log
             cursor.execute("SELECT name FROM events WHERE id = %s", (event_id,))
             event = cursor.fetchone()
             event_name = event['name'] if event else f"ID {event_id}"
 
-            # Delete the event
-            cursor.execute("DELETE FROM events WHERE id = %s", (event_id,))
+            # Soft Delete: Updated timestamp instead of DELETE FROM
+            cursor.execute("UPDATE events SET deleted_at = CURRENT_TIMESTAMP WHERE id = %s", (event_id,))
             
-            log_action('Admin', 'DELETE_EVENT', f"Deleted event: {event_name}")
+            log_action('Admin', 'SOFT_DELETE_EVENT', f"Archived event: {event_name}")
             db.commit()
-            return jsonify({'message': 'Event deleted successfully.'}), 200
+            return jsonify({'message': 'Event securely archived.'}), 200
         except Exception as e:
             db.rollback()
             return jsonify({'message': str(e)}), 500

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import pandas as pd
-import psycopg2 # Updated: Changed from sqlite3 to psycopg2
+import psycopg2 
+from psycopg2.extras import execute_values
 from database import get_db_connection
 from helpers import log_action, encrypt_data, decrypt_data
 
@@ -10,7 +11,7 @@ students_bp = Blueprint('students', __name__)
 @students_bp.route('/api/students', methods=['GET', 'POST'], strict_slashes=False)
 def manage_students():
     db = get_db_connection()
-    cursor = db.cursor() # PostgreSQL requires a cursor
+    cursor = db.cursor() 
     
     if request.method == 'GET':
         cursor.execute("SELECT * FROM students ORDER BY last_name ASC")
@@ -42,7 +43,7 @@ def manage_students():
                        data['program'], data['year_level'], data['section']))
         db.commit()
         return jsonify({'message': 'Student added.'}), 201
-    except psycopg2.IntegrityError: # Updated: Changed to psycopg2 error
+    except psycopg2.IntegrityError: 
         db.rollback()
         return jsonify({'message': 'Student Number exists.'}), 409
     except Exception as e:
@@ -78,36 +79,46 @@ def update_student(student_no):
     finally:
         cursor.close()
 
-# Encrypt Logic (Import)
 @students_bp.route('/api/admin/import_students', methods=['POST'])
 def import_students():
-    if 'file' not in request.files: return jsonify({'message': 'No file'}), 400
-    file = request.files['file']
+    # Expect JSON data instead of a file
+    data = request.get_json()
+    
+    if not data or not isinstance(data, list):
+        return jsonify({'message': 'Invalid data format. Expected a JSON array.'}), 400
+
     db = get_db_connection()
     cursor = db.cursor()
     try:
-        df = pd.read_csv(file)
-        df = df.fillna('')
-        df['student_no'] = df['student_no'].astype(str)
+        students_data = []
         
-        # Handle encryption
-        if 'first_name' in df.columns:
-            df['first_name'] = df['first_name'].apply(encrypt_data)
-        if 'middle_name' in df.columns:
-            df['middle_name'] = df['middle_name'].apply(encrypt_data)
-        if 'last_name' in df.columns:
-            df['last_name'] = df['last_name'].apply(encrypt_data)
-        
-        # Create tuple list
-        students_data = [(r['student_no'].strip(), r['first_name'], r.get('middle_name', ''), 
-                          r['last_name'], r['program'].strip(), r['year_level'].strip(), r['section'].strip()) 
-                         for _, r in df.iterrows()]
-        
-        # Updated: Postgres uses ON CONFLICT instead of INSERT OR REPLACE
-        # Change '?' to '%s'
+        # Loop through the chunk and apply encryption
+        for r in data:
+            # Skip empty rows if any sneak through
+            if not r.get('student_no') or not r.get('last_name') or not r.get('first_name'):
+                continue
+                
+            enc_first = encrypt_data(str(r.get('first_name', '')).strip())
+            enc_middle = encrypt_data(str(r.get('middle_name', '')).strip())
+            enc_last = encrypt_data(str(r.get('last_name', '')).strip())
+            
+            students_data.append((
+                str(r.get('student_no', '')).strip(), 
+                enc_first, 
+                enc_middle, 
+                enc_last, 
+                str(r.get('program', '')).strip(), 
+                str(r.get('year_level', '')).strip(), 
+                str(r.get('section', '')).strip()
+            ))
+
+        if not students_data:
+            return jsonify({'message': 'No valid records found in this chunk.'}), 400
+
+        # Use execute_values with ON CONFLICT for safe, fast batching
         query = """
             INSERT INTO students (student_no, first_name, middle_name, last_name, program, year_level, section) 
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            VALUES %s
             ON CONFLICT (student_no) DO UPDATE SET
                 first_name = EXCLUDED.first_name,
                 middle_name = EXCLUDED.middle_name,
@@ -116,14 +127,17 @@ def import_students():
                 year_level = EXCLUDED.year_level,
                 section = EXCLUDED.section
         """
-        cursor.executemany(query, students_data)
         
-        log_action('admin', 'IMPORT_STUDENTS', f'Imported {len(students_data)} students')
+        execute_values(cursor, query, students_data)
+        
+        log_action('admin', 'IMPORT_STUDENTS', f'Imported chunk of {len(students_data)} students')
         db.commit()
-        return jsonify({'message': 'Import successful', 'count': len(students_data)}), 201
+        return jsonify({'message': 'Import successful', 'count': len(students_data)}), 200
+        
     except Exception as e:
         db.rollback()
-        return jsonify({'message': str(e)}), 500
+        print(f"Import Error: {str(e)}") 
+        return jsonify({'message': f"Database error: {str(e)}"}), 500
     finally:
         cursor.close()
 
@@ -217,7 +231,6 @@ def get_available_roster_sections():
         cursor.execute(query, tuple(params))
         rows = cursor.fetchall()
         
-        # Extract the 'name' field from the section records
         sections = [row['name'] for row in rows]
         
         return jsonify(sections), 200

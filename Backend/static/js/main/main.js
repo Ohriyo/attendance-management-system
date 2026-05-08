@@ -2,8 +2,34 @@ import { elements } from './dom.js';
 import * as API from './api.js';
 import * as UI from './ui.js';
 import { getActiveEventId, setActiveEventId } from './state.js';
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const supabaseUrl = 'https://rmyfvexaudhevjiscozj.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJteWZ2ZXhhdWRoZXZqaXNjb3pqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODYyNTUsImV4cCI6MjA4NzI2MjI1NX0.9ua44_HqIYDfCRw5TPPCU4qZc53ujQQ3ELrKuHktIL0';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // --- Core Logic Functions ---
+
+function startRealtimeListener(eventId) {
+    console.log("Subscribing to realtime attendance updates for Event ID:", eventId);
+
+    supabase
+      .channel('public:attendance')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to any change
+          schema: 'public',
+          table: 'attendance',
+          filter: `event_id=eq.${eventId}` 
+        },
+        (payload) => {
+          console.log('New attendance recorded! Updating table...', payload);
+          fetchAndRenderAttendanceList(); // Instantly update the UI
+        }
+      )
+      .subscribe();
+}
 
 async function fetchAndRenderAttendanceList() {
     const activeEventId = getActiveEventId();
@@ -43,7 +69,9 @@ async function loadActiveEvent() {
 
         UI.updateEventTitle(event.name);
         console.log(`System linked to Active Event: ${event.name} (ID: ${event.id})`);
+        
         fetchAndRenderAttendanceList();
+        startRealtimeListener(event.id);
 
     } catch (error) {
         console.error('Failed to load active event:', error);

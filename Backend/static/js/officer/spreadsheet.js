@@ -136,10 +136,10 @@ function renderSpreadsheetRows(roster, globalStartIndex) {
             <td class="border-r border-gray-200 dark:border-gray-700 text-center text-xs text-gray-500 font-medium">${actualRowNumber}</td>
             <td class="border-r border-gray-200 dark:border-gray-700 px-3 py-1 font-bold text-gray-800 dark:text-gray-100 uppercase text-xs">${row.last_name}</td>
             <td class="border-r border-gray-200 dark:border-gray-700 px-3 py-1 text-gray-700 dark:text-gray-300 uppercase text-xs">${row.first_name}</td>
-            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${row.am_in || ''}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'am_in', this.value)"></td>
-            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${row.am_out || ''}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'am_out', this.value)"></td>
-            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${row.pm_in || ''}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'pm_in', this.value)"></td>
-            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${row.pm_out || ''}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'pm_out', this.value)"></td>
+            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${formatForInput(row.am_in)}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'am_in', this.value)"></td>
+            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${formatForInput(row.am_out)}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'am_out', this.value)"></td>
+            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${formatForInput(row.pm_in)}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'pm_in', this.value)"></td>
+            <td class="border-r border-gray-200 dark:border-gray-700 p-0"><input type="text" value="${formatForInput(row.pm_out)}" class="${inputClass}" placeholder="--:--" onchange="saveCell('${row.student_no}', 'pm_out', this.value)"></td>
             <td class="p-0 relative">
                 <select onchange="saveCell('${row.student_no}', 'status', this.value); refreshRowColor(this);" 
                         class="w-full h-full bg-transparent text-center outline-none cursor-pointer text-xs uppercase appearance-none py-3 z-10 relative ${selectClass}">
@@ -152,5 +152,20 @@ function renderSpreadsheetRows(roster, globalStartIndex) {
             </td>
         `;
         tbody.appendChild(tr);
+    });
+}
+
+// --- Time Formatting Helper for Inputs ---
+function formatForInput(timestampString) {
+    if (!timestampString || timestampString === "--:--") return "";
+    
+    const dateObj = new Date(timestampString);
+    if (isNaN(dateObj.getTime())) return "";
+
+    return dateObj.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Manila' 
     });
 }

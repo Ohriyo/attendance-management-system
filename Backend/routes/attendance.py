@@ -11,14 +11,6 @@ attendance_bp = Blueprint('attendance', __name__)
 @attendance_bp.route('/api/check_in', methods=['POST'])
 def check_in_student():
     data = request.get_json()
-
-    # --- SECURITY UPDATE: Session Verification ---
-    # officer_username = data.get('username')
-    # session_token = data.get('token')
-
-    # if not is_session_valid(officer_username, session_token):
-    #   return jsonify({'message': 'Session revoked or invalid. Please login again.'}), 401
-
     event_id = data.get('event_id')
     student_no = data.get('student_no')
 
@@ -26,20 +18,18 @@ def check_in_student():
         return jsonify({'message': 'Missing event_id or student_no.'}), 400
 
     db = get_db_connection()
-    cursor = db.cursor() # PostgreSQL requires a cursor object
+    cursor = db.cursor() 
     
-    # Validate Student - Updated '?' to '%s'
+    # Validate Student
     cursor.execute("SELECT first_name, last_name FROM students WHERE student_no = %s", (student_no,))
     student_info = cursor.fetchone()
     
     if student_info is None:
         return jsonify({'message': f'Student ID {student_no} is not registered.'}), 404
 
-    # Convert Row to dict so we can use the data
     s_info = dict(student_info)
     real_first_name = decrypt_data(s_info['first_name'])
     
-    # Updated '?' to '%s'
     cursor.execute("SELECT am_cutoff FROM events WHERE id = %s", (event_id,))
     event_data = cursor.fetchone()
     
@@ -49,12 +39,14 @@ def check_in_student():
         cutoff_time = datetime.strptime(cutoff_str, '%H:%M').time()
         current_time = datetime.now().time()
         is_am = current_time <= cutoff_time
-        current_time_str = datetime.now().strftime('%I:%M %p')
+        
+        current_time_str = datetime.now().strftime('%I:%M %p') # For the UI Popup
+        db_timestamp = datetime.now().isoformat()              # For PostgreSQL
     except ValueError:
         is_am = datetime.now().hour < 12
         current_time_str = datetime.now().strftime('%I:%M %p')
+        db_timestamp = datetime.now().isoformat()
 
-    # Updated '?' to '%s'
     cursor.execute(
         "SELECT * FROM attendance WHERE event_id = %s AND student_no = %s", 
         (event_id, student_no)
@@ -66,30 +58,26 @@ def check_in_student():
 
     try:
         if record is None:
-            # CREATE NEW RECORD - Updated '?' to '%s'
             if is_am:
                 cursor.execute("INSERT INTO attendance (event_id, student_no, am_in, status) VALUES (%s, %s, %s, 'Present')", 
-                           (event_id, student_no, current_time_str))
+                           (event_id, student_no, db_timestamp))
                 message = f"Good Morning, {real_first_name}! (AM IN)"
                 status_type = "in"
             else:
                 cursor.execute("INSERT INTO attendance (event_id, student_no, pm_in, status) VALUES (%s, %s, %s, 'Present')", 
-                           (event_id, student_no, current_time_str))
+                           (event_id, student_no, db_timestamp))
                 message = f"Good Afternoon, {real_first_name}! (PM IN)"
                 status_type = "in"
         else:
-            # UPDATE EXISTING RECORD
             record_id = record['id']
             
             if is_am:
                 if not record['am_in']:
-                    # Updated '?' to '%s'
-                    cursor.execute("UPDATE attendance SET am_in = %s, status = 'Present' WHERE id = %s", (current_time_str, record_id))
+                    cursor.execute("UPDATE attendance SET am_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
                     message = f"AM Time-IN recorded for {real_first_name}."
                     status_type = "in"
                 elif not record['am_out']:
-                    # Updated '?' to '%s'
-                    cursor.execute("UPDATE attendance SET am_out = %s WHERE id = %s", (current_time_str, record_id))
+                    cursor.execute("UPDATE attendance SET am_out = %s WHERE id = %s", (db_timestamp, record_id))
                     message = f"AM Time-OUT recorded for {real_first_name}."
                     status_type = "out"
                 else:
@@ -97,15 +85,12 @@ def check_in_student():
                     status_type = "completed"
             
             else: 
-                # Logic for PM
                 if not record['pm_in']:
-                    # Updated '?' to '%s'
-                    cursor.execute("UPDATE attendance SET pm_in = %s, status = 'Present' WHERE id = %s", (current_time_str, record_id))
+                    cursor.execute("UPDATE attendance SET pm_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
                     message = f"PM Time-IN recorded for {real_first_name}."
                     status_type = "in"
                 elif not record['pm_out']:
-                    # Updated '?' to '%s'
-                    cursor.execute("UPDATE attendance SET pm_out = %s WHERE id = %s", (current_time_str, record_id))
+                    cursor.execute("UPDATE attendance SET pm_out = %s WHERE id = %s", (db_timestamp, record_id))
                     message = f"PM Time-OUT recorded for {real_first_name}."
                     status_type = "out"
                 else:
@@ -116,12 +101,12 @@ def check_in_student():
         return jsonify({
             'message': message,
             'status': status_type,
-            'time': current_time_str,
-            'student_name': real_first_name # Send clean name to frontend
+            'time': current_time_str, 
+            'student_name': real_first_name 
         }), 200 
 
     except Exception as e:
-        db.rollback() # Rollback on error
+        db.rollback() 
         return jsonify({'message': f'Database error: {str(e)}'}), 500
     finally:
         cursor.close()
@@ -141,7 +126,8 @@ def export_csv(event_id):
         SELECT s.student_no, s.last_name, s.first_name, s.program, s.year_level, s.section,
                a.am_in, a.am_out, a.pm_in, a.pm_out, a.status
         FROM attendance a JOIN students s ON a.student_no = s.student_no
-        WHERE a.event_id = %s ORDER BY s.last_name ASC
+        WHERE a.event_id = %s AND a.deleted_at IS NULL 
+        ORDER BY s.last_name ASC
     """, (event_id,))
     records = cursor.fetchall()
 
@@ -168,26 +154,45 @@ def section_spreadsheet():
     db = get_db_connection()
     cursor = db.cursor()
     
-    # Updated '?' to '%s'
-    query = """
-        SELECT s.student_no, s.last_name, s.first_name, 
-               COALESCE(a.am_in, '') as am_in, COALESCE(a.am_out, '') as am_out,
-               COALESCE(a.pm_in, '') as pm_in, COALESCE(a.pm_out, '') as pm_out, COALESCE(a.status, 'Present') as status
-        FROM students s LEFT JOIN attendance a ON s.student_no = a.student_no AND a.event_id = %s
-        WHERE s.program = %s AND s.year_level = %s AND s.section = %s ORDER BY s.last_name ASC
-    """
-    cursor.execute(query, (args.get('event_id'), args.get('program'), args.get('year'), args.get('section')))
-    results = cursor.fetchall()
-    
-    final_results = []
-    for row in results:
-        r = dict(row)
-        r['first_name'] = decrypt_data(r['first_name'])
-        r['last_name'] = decrypt_data(r['last_name'])
-        final_results.append(r)
+    try:
 
-    cursor.close()
-    return jsonify(final_results), 200
+        query = """
+            SELECT s.student_no, s.last_name, s.first_name, 
+                   a.am_in::text, a.am_out::text,
+                   a.pm_in::text, a.pm_out::text, 
+                   COALESCE(a.status, 'Absent') as status
+            FROM students s 
+            LEFT JOIN attendance a ON s.student_no = a.student_no AND a.event_id = %s AND a.deleted_at IS NULL
+            WHERE s.program = %s AND s.year_level = %s AND s.section = %s 
+            ORDER BY s.last_name ASC
+        """
+        cursor.execute(query, (args.get('event_id'), args.get('program'), args.get('year'), args.get('section')))
+        results = cursor.fetchall()
+        
+        final_results = []
+        for row in results:
+            r = dict(row)
+            # Decrypt names
+            r['first_name'] = decrypt_data(r['first_name'])
+            r['last_name'] = decrypt_data(r['last_name'])
+            
+            # Ensure nulls are handled gracefully for the frontend
+            r['am_in'] = r['am_in'] if r['am_in'] else None
+            r['am_out'] = r['am_out'] if r['am_out'] else None
+            r['pm_in'] = r['pm_in'] if r['pm_in'] else None
+            r['pm_out'] = r['pm_out'] if r['pm_out'] else None
+
+            final_results.append(r)
+
+        return jsonify(final_results), 200
+
+    except Exception as e:
+        db.rollback()
+        print(f"Spreadsheet Error: {str(e)}") # Prints to your server console for debugging
+        return jsonify({'message': 'Failed to generate spreadsheet', 'error': str(e)}), 500
+        
+    finally:
+        cursor.close()
 
 @attendance_bp.route('/api/attendance/<int:event_id>', methods=['GET'])
 def get_attendance_list(event_id):
@@ -204,7 +209,7 @@ def get_attendance_list(event_id):
         FROM attendance a
         JOIN students s ON a.student_no = s.student_no
         JOIN events e ON a.event_id = e.id
-        WHERE a.event_id = %s
+        WHERE a.event_id = %s AND a.deleted_at IS NULL
         ORDER BY a.id DESC
     """, (event_id,))
     attendance_records = cursor.fetchall()
@@ -221,19 +226,19 @@ def get_attendance_list(event_id):
 
         # Determine Time In
         if rec_dict['am_in']:
-            rec_dict['time_in'] = f"{rec_dict['am_in']}"
+            rec_dict['time_in'] = rec_dict['am_in']
         elif rec_dict['pm_in']:
-            rec_dict['time_in'] = f"{rec_dict['pm_in']}"
+            rec_dict['time_in'] = rec_dict['pm_in']
         else:
-            rec_dict['time_in'] = "--:--"
+            rec_dict['time_in'] = None # Changed from "--:--"
 
         # Determine Time Out
         if rec_dict['pm_out']:
-             rec_dict['time_out'] = f"{rec_dict['pm_out']}"
+             rec_dict['time_out'] = rec_dict['pm_out']
         elif rec_dict['am_out']:
-             rec_dict['time_out'] = f"{rec_dict['am_out']}"
+             rec_dict['time_out'] = rec_dict['am_out']
         else:
-             rec_dict['time_out'] = "--:--"
+             rec_dict['time_out'] = None # Changed from "--:--"
 
         formatted_attendance.append(rec_dict)
     
@@ -245,7 +250,6 @@ def get_event_stats(event_id):
     db = get_db_connection()
     cursor = db.cursor()
     
-    # Use 'AS' so the dictionary key matches your dashboard.js requirements
     cursor.execute("SELECT COUNT(*) AS checked_in_count FROM attendance WHERE event_id = %s", (event_id,))
     stats_row = cursor.fetchone()
 

@@ -75,7 +75,7 @@ export function populateAttendanceTable(attendanceRecords) {
     elements.attendanceListBody.innerHTML = ''; // Clear previous data
     
     if (!attendanceRecords || attendanceRecords.length === 0) {
-        elements.attendanceListBody.innerHTML = `<tr><td colspan="10" class="px-6 py-4 text-sm text-gray-500 text-center">No attendance recorded yet for this event.</td></tr>`;
+        elements.attendanceListBody.innerHTML = `<tr><td colspan="11" class="px-6 py-4 text-sm text-gray-500 text-center">No attendance recorded yet for this event.</td></tr>`;
         return;
     }
 
@@ -83,6 +83,7 @@ export function populateAttendanceTable(attendanceRecords) {
         const row = document.createElement('tr');
         row.classList.add('hover:bg-gray-50', 'dark:hover:bg-gray-800/50', 'transition-colors');
         const recordIndex = attendanceRecords.length - index; 
+        
         row.innerHTML = `
             <td class="px-3 py-3 text-center text-sm font-medium text-yellow-600 dark:text-yellow-400">${recordIndex}</td>
             <td class="px-3 py-3 whitespace-nowrap text-sm font-mono text-gray-900 dark:text-gray-200">${record.student_no}</td>
@@ -93,8 +94,8 @@ export function populateAttendanceTable(attendanceRecords) {
             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-200 hidden md:table-cell">${record.year_level}</td>
             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-200 hidden lg:table-cell">${record.section}</td>
             <td class="px-3 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">${record.date}</td>
-            <td class="px-3 py-3 whitespace-nowrap text-sm font-semibold text-green-600 dark:text-green-400">${record.time_in}</td>
-            <td class="px-3 py-3 whitespace-nowrap text-sm font-semibold text-red-600 dark:text-red-400">${record.time_out}</td>
+            <td class="px-3 py-3 whitespace-nowrap text-sm font-semibold text-green-600 dark:text-green-400">${formatTo12Hour(record.time_in)}</td>
+            <td class="px-3 py-3 whitespace-nowrap text-sm font-semibold text-red-600 dark:text-red-400">${formatTo12Hour(record.time_out)}</td>
         `;
         elements.attendanceListBody.appendChild(row);
     });
@@ -125,4 +126,18 @@ export function closeOfficerModal() {
 export function setOfficerMessage(msg, className) {
     elements.officerMessage.textContent = msg;
     elements.officerMessage.className = className;
+}
+
+export function formatTo12Hour(timestampString) {
+    if (!timestampString || timestampString === "--:--") return "---";
+    const dateObj = new Date(timestampString);
+
+    if (isNaN(dateObj.getTime())) return "---";
+
+    return dateObj.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'Asia/Manila' 
+    });
 }

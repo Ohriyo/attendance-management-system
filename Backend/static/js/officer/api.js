@@ -50,8 +50,16 @@ export const saveEvent = async (url, method, data) =>
         body: JSON.stringify(data)
     });
 
-export const deleteEvent = async (id) => 
-    fetch(`${API_BASE_URL}/events/${id}`, { method: 'DELETE' });
+// THIS IS THE ONLY deleteEvent DECLARATION NOW
+export async function deleteEvent(eventId, body) {
+    return fetch(`${API_BASE_URL}/events/${eventId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body) 
+    });
+}
 
 export const setActiveEvent = async (eventId) => 
     fetch(`${API_BASE_URL}/active_event`, {
