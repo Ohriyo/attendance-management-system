@@ -57,7 +57,7 @@ def active_event():
     
     cursor.execute("SELECT value FROM settings WHERE key = 'active_event_id'")
     setting = cursor.fetchone()
-    
+
     if not setting: 
         cursor.close()
         return jsonify({'message': 'No active event.'}), 404
