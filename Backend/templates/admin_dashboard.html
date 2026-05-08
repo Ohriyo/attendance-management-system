@@ -26,6 +26,6 @@
     {% include 'partials/admin/modals/forms.html' %}
     {% include 'partials/admin/modals/alerts.html' %}
 
-    <script type="module" src="/static/js/main/main.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/admin/admin.js') }}"></script>  
 </body>
 </html>

@@ -1,7 +1,7 @@
 import { API_BASE_URL } from './config.js';
 
 export async function fetchActiveEvent() {
-    return await fetch(`${API_BASE_URL}/active_event`);
+    return await fetch(`${API_BASE_URL}'/api/active_event`);
 }
 
 export async function fetchAttendance(eventId) {
