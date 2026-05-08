@@ -1,8 +1,9 @@
 import { API_BASE_URL } from './config.js';
 
-export async function fetchActiveEvent() {
-    return await fetch(`${API_BASE_URL}'/api/active_event`);
-}
+const fetchEvents = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/active_event`);
+    return response.json();
+};
 
 export async function fetchAttendance(eventId) {
     return await fetch(`${API_BASE_URL}/attendance/${eventId}`);
@@ -28,4 +29,4 @@ export async function postLogin(credentials) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
     });
-}
+}   
