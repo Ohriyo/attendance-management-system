@@ -1,5 +1,5 @@
 import { elements } from './dom.js';
-import * as API from './api.js';
+import { api as API } from './api.js';
 import * as UI from './ui.js';
 import { getActiveEventId, setActiveEventId } from './state.js';
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';

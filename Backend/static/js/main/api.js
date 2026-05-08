@@ -1,32 +1,26 @@
 import { API_BASE_URL } from './config.js';
 
-const fetchEvents = async () => {
-    const response = await fetch(`${API_BASE_URL}/api/active_event`);
-    return response.json();
+// Generic Fetch Wrapper (Optional but keeps code clean)
+const apiFetch = async (endpoint, options = {}) => {
+    return fetch(`${API_BASE_URL}${endpoint}`, options);
 };
 
-export async function fetchAttendance(eventId) {
-    return await fetch(`${API_BASE_URL}/attendance/${eventId}`);
-}
-
-export async function fetchStudent(studentId) {
-    return await fetch(`${API_BASE_URL}/student/${studentId}`);
-}
-
-export async function postCheckIn(payload) {
-    return await fetch(`${API_BASE_URL}/check_in`, {
+export const api = {
+    fetchActiveEvent: () => apiFetch('/api/active_event'),
+    
+    fetchAttendance: (eventId) => apiFetch(`/api/attendance/${eventId}`),
+    
+    fetchStudent: (studentId) => apiFetch(`/api/students/${studentId}`),
+    
+    postCheckIn: (data) => apiFetch('/api/check_in', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-}
-
-export async function postLogin(credentials) {
-    return await fetch(`${API_BASE_URL}/login`, {
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    }),
+    
+    postLogin: (credentials) => apiFetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
-    });
-}   
+    })
+};  
