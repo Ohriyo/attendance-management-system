@@ -1,20 +1,18 @@
 import { API_BASE_URL } from './config.js';
-
-// --- Session ---
 export const checkSession = async (payload) => 
-    fetch(`${API_BASE_URL}/check_session`, {
+    fetch(`${API_BASE_URL}/api/check_session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });
 
 // --- Students ---
-export const fetchStudents = async () => fetch(`${API_BASE_URL}/students`);
+export const fetchStudents = async () => fetch(`${API_BASE_URL}/api/students`);
 
 export const fetchAvailableSections = async (program, year) => 
-    fetch(`${API_BASE_URL}/students/available_sections?program=${program}&year_level=${year}`);
+    fetch(`${API_BASE_URL}/api/students/available_sections?program=${program}&year_level=${year}`);
 
-export const saveStudent = async (url, method, data) => 
+export const saveStudent = async (url,  method, data) => 
     fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -22,26 +20,26 @@ export const saveStudent = async (url, method, data) =>
     });
 
 export const deleteStudent = async (id) => 
-    fetch(`${API_BASE_URL}/students/${id}`, { method: 'DELETE' });
+    fetch(`${API_BASE_URL}/api/students/${id}`, { method: 'DELETE' });
 
 // --- Sections ---
-export const fetchSections = async () => fetch(`${API_BASE_URL}/sections`);
+export const fetchSections = async () => fetch(`${API_BASE_URL}/api/sections`);
 
 export const createSection = async (data) => 
-    fetch(`${API_BASE_URL}/sections`, {
+    fetch(`${API_BASE_URL}/api/sections`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
 
 export const deleteSection = async (id) => 
-    fetch(`${API_BASE_URL}/sections/${id}`, { method: 'DELETE' });
+    fetch(`${API_BASE_URL}/api/sections/${id}`, { method: 'DELETE' });
 
 export const fetchSpreadsheet = async (eventId, program, year, section) => 
-    fetch(`${API_BASE_URL}/section_spreadsheet?event_id=${eventId}&program=${program}&year=${year}&section=${section}`);
+    fetch(`${API_BASE_URL}/api/section_spreadsheet?event_id=${eventId}&program=${program}&year=${year}&section=${section}`);
 
 // --- Events ---
-export const fetchEvents = async () => fetch(`${API_BASE_URL}/events`);
+export const fetchEvents = async () => fetch(`${API_BASE_URL}/api/events`);
 
 export const saveEvent = async (url, method, data) => 
     fetch(url, {
@@ -50,9 +48,8 @@ export const saveEvent = async (url, method, data) =>
         body: JSON.stringify(data)
     });
 
-// THIS IS THE ONLY deleteEvent DECLARATION NOW
 export async function deleteEvent(eventId, body) {
-    return fetch(`${API_BASE_URL}/events/${eventId}`, {
+    return fetch(`${API_BASE_URL}/api/events/${eventId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -62,15 +59,15 @@ export async function deleteEvent(eventId, body) {
 }
 
 export const setActiveEvent = async (eventId) => 
-    fetch(`${API_BASE_URL}/active_event`, {
+    fetch(`${API_BASE_URL}/api/active_event`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ event_id: eventId })
     });
 
-export const fetchActiveEvent = async () => fetch(`${API_BASE_URL}/active_event`);
+export const fetchActiveEvent = async () => fetch(`${API_BASE_URL}/api/active_event`);
 
 // --- Stats & Attendance ---
-export const fetchStats = async (eventId) => fetch(`${API_BASE_URL}/stats/${eventId}`);
-export const fetchAttendance = async (eventId) => fetch(`${API_BASE_URL}/attendance/${eventId}`);
-export const exportAttendance = async (eventId) => fetch(`${API_BASE_URL}/export/attendance/${eventId}`);
+export const fetchStats = async (eventId) => fetch(`${API_BASE_URL}/api/stats/${eventId}`);
+export const fetchAttendance = async (eventId) => fetch(`${API_BASE_URL}/api/attendance/${eventId}`);
+export const exportAttendance = async (eventId) => fetch(`${API_BASE_URL}/api/export/attendance/${eventId}`);
