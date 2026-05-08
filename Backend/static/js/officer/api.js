@@ -12,7 +12,7 @@ export const fetchStudents = async () => fetch(`${API_BASE_URL}/api/students`);
 export const fetchAvailableSections = async (program, year) => 
     fetch(`${API_BASE_URL}/api/students/available_sections?program=${program}&year_level=${year}`);
 
-export const saveStudent = async (url,  method, data) => 
+export const saveStudent = async (url, method, data) => 
     fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ export const fetchSpreadsheet = async (eventId, program, year, section) =>
 // --- Events ---
 export const fetchEvents = async () => fetch(`${API_BASE_URL}/api/events`);
 
-export const saveEvent = async (url, method, data) => 
+export const saveEvent = async (url, method, data) =>
     fetch(url, {
         method: method,
         headers: { 'Content-Type': 'application/json' },
