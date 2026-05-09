@@ -10,11 +10,15 @@ export function initTheme() {
 }
 
 export function toggleTheme() {
-    if (elements.html.classList.contains('dark')) {
-        elements.html.classList.remove('dark');
+    const htmlEl = document.documentElement;
+    
+    if (htmlEl.classList.contains('dark')) {
+        // Switch TO Light Mode
+        htmlEl.classList.remove('dark');
         localStorage.setItem('theme', 'light');
     } else {
-        elements.html.classList.add('dark');
+        // Switch TO Dark Mode
+        htmlEl.classList.add('dark');
         localStorage.setItem('theme', 'dark');
     }
 }
