@@ -262,7 +262,7 @@ async function handleStudentSubmit(e) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="ph ph-spinner-gap animate-spin"></i> Saving...';
     const isEditing = !!currentEditingStudentId;
-    const url = isEditing ? `${API_BASE_URL}/students/${currentEditingStudentId}` : `${API_BASE_URL}/students`;
+    const url = isEditing ? `${API_BASE_URL}/api/students/${currentEditingStudentId}` : `${API_BASE_URL}/api/students`;
     const method = isEditing ? 'PUT' : 'POST';
 
     let success = false;
