@@ -10,7 +10,7 @@ export const api = {
     
     fetchAttendance: (eventId) => apiFetch(`/api/attendance/${eventId}`),
     
-    fetchStudent: (studentId) => apiFetch(`/api/students/${studentId}`),
+    fetchStudent: (studentId) => apiFetch(`/api/student/${studentId}`),
     
     postCheckIn: (data) => apiFetch('/api/check_in', {
         method: 'POST',
