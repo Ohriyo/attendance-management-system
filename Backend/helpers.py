@@ -3,35 +3,42 @@ import psycopg2
 from cryptography.fernet import Fernet
 from database import get_db_connection
 
-# CONFIGURATION 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__)) 
-PROJECT_ROOT = os.path.dirname(CURRENT_DIR)              
-KEY_PATH = os.path.join(PROJECT_ROOT, 'secret.key')
+# --- CONFIGURATION (Production Ready) ---
+# Retrieve the key securely from the environment
+ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
 
 cipher = None
+if ENCRYPTION_KEY:
+    try:
+        # Ensure the key is in bytes format
+        cipher = Fernet(ENCRYPTION_KEY.encode('utf-8'))
+    except Exception as e:
+        print(f"CRITICAL: Invalid ENCRYPTION_KEY format. {e}")
+else:
+    print("SECURITY WARNING: ENCRYPTION_KEY environment variable is missing! Encryption disabled.")
 
-try:
-    with open(KEY_PATH, "rb") as key_file:
-        key = key_file.read()
-        cipher = Fernet(key)
-except FileNotFoundError:
-    print(f"SECURITY WARNING: secret.key not found at {KEY_PATH}. Encryption disabled.")
-
-# ENCRYPTION TOOLS 
+# --- ENCRYPTION TOOLS --- 
 def encrypt_data(data):
     if not data or cipher is None: return data
     try:
-        return cipher.encrypt(data.encode()).decode()
+        return cipher.encrypt(data.encode('utf-8')).decode('utf-8')
     except Exception as e:
         print(f"Encryption error: {e}")
         return data
 
 def decrypt_data(data):
     if not data or cipher is None: return data
-    try:
-        return cipher.decrypt(data.encode()).decode()
-    except Exception:
+    
+    # If the data doesn't look like Fernet (doesn't start with gAAAA), return it as-is
+    if not str(data).startswith('gAAAA'):
         return data
+
+    try:
+        return cipher.decrypt(data.encode('utf-8')).decode('utf-8')
+    except Exception as e:
+        # We print the error so it shows up in Render Logs, but return a fallback string
+        print(f"Decryption error on payload {data[:15]}... : {e}")
+        return "[Decryption Failed]"
 
 def log_action(actor, action, details):
     """Writes system events to the audit_logs table using Postgres syntax."""
