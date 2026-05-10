@@ -12,7 +12,17 @@
             <button id="set-active-btn" class="p-2.5 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 transition-all tooltip" title="Set as Live Event">
                 <i class="ph ph-broadcast text-xl"></i>
             </button>
-        </div>
+        <div class="hidden md:flex items-center gap-2 ml-2 pl-4 border-l border-gray-200 dark:border-gray-700 h-10">
+        <span id="label-mode-in" class="text-xs font-bold text-green-600 dark:text-green-400 transition-colors">IN</span>
+
+        <button id="attendance-mode-toggle" type="button" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-green-500 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2" role="switch" aria-checked="false">
+            <span class="sr-only">Toggle Attendance Mode</span>
+            <span id="mode-toggle-knob" aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+        </button>
+
+        <span id="label-mode-out" class="text-xs font-bold text-gray-400 dark:text-gray-500 transition-colors">OUT</span>
+    </div>
+</div>
 
         <div class="flex items-center gap-4 w-full md:w-auto">
             <div class="text-right hidden md:block">

@@ -12,12 +12,14 @@ export async function loadMonitoringView() {
     await updateMonitoringData(currentEventId);
     selector.removeEventListener('change', handleEventChange);
     selector.addEventListener('change', handleEventChange);
+    
     const exportBtn = document.getElementById('export-csv-btn');
     exportBtn.removeEventListener('click', handleCSVExport); 
     exportBtn.addEventListener('click', handleCSVExport);
 
     checkActiveEventStatus();
 
+    // --- Set Active Event Button Logic ---
     const setActiveBtn = document.getElementById('set-active-btn');
     setActiveBtn.replaceWith(setActiveBtn.cloneNode(true)); 
     document.getElementById('set-active-btn').addEventListener('click', async () => {
@@ -33,6 +35,49 @@ export async function loadMonitoringView() {
             }
         } catch(e) { console.error(e); }
     });
+
+    // --- NEW: Attendance Mode Toggle Logic (Method 3) ---
+    const modeToggleBtn = document.getElementById('attendance-mode-toggle');
+    if (modeToggleBtn) {
+        // Clear old listeners to prevent duplicates during view swaps
+        const newToggleBtn = modeToggleBtn.cloneNode(true);
+        modeToggleBtn.parentNode.replaceChild(newToggleBtn, modeToggleBtn);
+
+        newToggleBtn.addEventListener('click', async () => {
+            try {
+                // 1. Fetch the STRICT system-wide active event
+                const activeEventResponse = await API.fetchActiveEvent();
+                if (!activeEventResponse.ok) {
+                    alert("No active live event set! Please set a live event first before changing modes.");
+                    return;
+                }
+                
+                const activeEventData = await activeEventResponse.json();
+                const activeEventId = activeEventData.id;
+                
+                // 2. Determine the current mode from the database state
+                const currentMode = activeEventData.attendance_mode || 'IN';
+                const newMode = currentMode === 'IN' ? 'OUT' : 'IN';
+
+                // 3. Send update request to the backend
+                const updateResponse = await fetch(`/api/events/${activeEventId}/mode`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mode: newMode })
+                });
+
+                if (updateResponse.ok) {
+                    // Update UI only on successful database update
+                    updateToggleUI(newMode);
+                } else {
+                    const err = await updateResponse.json();
+                    alert(`Failed to change mode: ${err.message}`);
+                }
+            } catch (error) {
+                console.error("Error toggling mode:", error);
+            }
+        });
+    }
 }
 
 function handleEventChange(e) {
@@ -186,6 +231,13 @@ async function checkActiveEventStatus() {
         if(response.ok) {
             const event = await response.json();
             document.getElementById('live-indicator').textContent = event.name;
+            
+            // NEW: Sync the toggle switch UI with the actual database mode
+            if (event.attendance_mode) {
+                updateToggleUI(event.attendance_mode);
+            } else {
+                updateToggleUI('IN'); // Fallback default
+            }
         }
     } catch(e) { console.error(e); }
 }
@@ -214,4 +266,26 @@ function formatTo12Hour(timestampString) {
         hour12: true,
         timeZone: 'Asia/Manila' 
     });
+}
+
+// --- NEW: UI Update function for the toggle switch ---
+function updateToggleUI(mode) {
+    const modeToggleBtn = document.getElementById('attendance-mode-toggle');
+    const knob = document.getElementById('mode-toggle-knob');
+    const labelIn = document.getElementById('label-mode-in');
+    const labelOut = document.getElementById('label-mode-out');
+
+    if (!modeToggleBtn || !knob) return; // Safety check
+
+    if (mode === 'OUT') {
+        modeToggleBtn.classList.replace('bg-green-500', 'bg-red-500');
+        knob.classList.replace('translate-x-0', 'translate-x-5');
+        labelIn.classList.replace('text-green-600', 'text-gray-400');
+        labelOut.classList.replace('text-gray-400', 'text-red-600');
+    } else {
+        modeToggleBtn.classList.replace('bg-red-500', 'bg-green-500');
+        knob.classList.replace('translate-x-5', 'translate-x-0');
+        labelIn.classList.replace('text-gray-400', 'text-green-600');
+        labelOut.classList.replace('text-red-600', 'text-gray-400');
+    }
 }

@@ -30,10 +30,11 @@ def check_in_student():
     s_info = dict(student_info)
     real_first_name = decrypt_data(s_info['first_name'])
     
-    cursor.execute("SELECT am_cutoff FROM events WHERE id = %s", (event_id,))
+    cursor.execute("SELECT am_cutoff, attendance_mode FROM events WHERE id = %s", (event_id,))
     event_data = cursor.fetchone()
-    
+
     cutoff_str = event_data['am_cutoff'] if event_data and event_data['am_cutoff'] else '12:00'
+    mode = event_data['attendance_mode'] if event_data else 'IN'
     
     try:
         cutoff_time = datetime.strptime(cutoff_str, '%H:%M').time()
@@ -57,53 +58,61 @@ def check_in_student():
     status_type = "info"
 
     try:
-        if record is None:
-            if is_am:
-                cursor.execute("INSERT INTO attendance (event_id, student_no, am_in, status) VALUES (%s, %s, %s, 'Present')", 
-                           (event_id, student_no, db_timestamp))
-                message = f"Good Morning, {real_first_name}! (AM IN)"
+        if mode == 'IN':
+            if record is None:
+                # First scan ever for this event
+                time_col = 'am_in' if is_am else 'pm_in'
+                cursor.execute(f"INSERT INTO attendance (event_id, student_no, {time_col}, status) VALUES (%s, %s, %s, 'Present')", 
+                               (event_id, student_no, db_timestamp))
+                message = f"Time IN recorded, {real_first_name}!"
                 status_type = "in"
             else:
-                cursor.execute("INSERT INTO attendance (event_id, student_no, pm_in, status) VALUES (%s, %s, %s, 'Present')", 
-                           (event_id, student_no, db_timestamp))
-                message = f"Good Afternoon, {real_first_name}! (PM IN)"
-                status_type = "in"
-        else:
+                record_id = record['id']
+                # Record exists. Check if they already timed in for the current session (AM or PM)
+                if is_am:
+                    if record['am_in']:
+                        return jsonify({'message': f"{real_first_name}, you have already Timed IN for the AM session.", 'status': 'error'}), 400
+                    else:
+                        cursor.execute("UPDATE attendance SET am_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
+                        message = f"AM Time IN recorded, {real_first_name}."
+                        status_type = "in"
+                else: # is PM
+                    if record['pm_in']:
+                        return jsonify({'message': f"{real_first_name}, you have already Timed IN for the PM session.", 'status': 'error'}), 400
+                    else:
+                        cursor.execute("UPDATE attendance SET pm_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
+                        message = f"PM Time IN recorded, {real_first_name}."
+                        status_type = "in"
+
+        # ---------------------------
+        # TIME OUT MODE LOGIC
+        # ---------------------------
+        elif mode == 'OUT':
+            if record is None:
+                return jsonify({'message': f"Cannot Time OUT. No Time IN record found for {real_first_name}.", 'status': 'error'}), 400
+
             record_id = record['id']
-            
             if is_am:
                 if not record['am_in']:
-                    cursor.execute("UPDATE attendance SET am_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
-                    message = f"AM Time-IN recorded for {real_first_name}."
-                    status_type = "in"
-                elif not record['am_out']:
-                    cursor.execute("UPDATE attendance SET am_out = %s WHERE id = %s", (db_timestamp, record_id))
-                    message = f"AM Time-OUT recorded for {real_first_name}."
-                    status_type = "out"
-                else:
-                    message = f"You have already completed your AM attendance, {real_first_name}."
-                    status_type = "completed"
-            
-            else: 
+                    return jsonify({'message': f"Cannot Time OUT. You haven't Timed IN for AM yet.", 'status': 'error'}), 400
+                if record['am_out']:
+                    return jsonify({'message': f"You have already Timed OUT for AM.", 'status': 'error'}), 400
+
+                cursor.execute("UPDATE attendance SET am_out = %s WHERE id = %s", (db_timestamp, record_id))
+                message = f"AM Time OUT recorded, {real_first_name}."
+                status_type = "out"
+            else: # is PM
                 if not record['pm_in']:
-                    cursor.execute("UPDATE attendance SET pm_in = %s, status = 'Present' WHERE id = %s", (db_timestamp, record_id))
-                    message = f"PM Time-IN recorded for {real_first_name}."
-                    status_type = "in"
-                elif not record['pm_out']:
-                    cursor.execute("UPDATE attendance SET pm_out = %s WHERE id = %s", (db_timestamp, record_id))
-                    message = f"PM Time-OUT recorded for {real_first_name}."
-                    status_type = "out"
-                else:
-                    message = f"You have already completed your PM attendance, {real_first_name}."
-                    status_type = "completed"
+                    return jsonify({'message': f"Cannot Time OUT. You haven't Timed IN for PM yet.", 'status': 'error'}), 400
+                if record['pm_out']:
+                    return jsonify({'message': f"You have already Timed OUT for PM.", 'status': 'error'}), 400
+
+                cursor.execute("UPDATE attendance SET pm_out = %s WHERE id = %s", (db_timestamp, record_id))
+                message = f"PM Time OUT recorded, {real_first_name}."
+                status_type = "out"
 
         db.commit()
-        return jsonify({
-            'message': message,
-            'status': status_type,
-            'time': current_time_str, 
-            'student_name': real_first_name 
-        }), 200 
+        return jsonify({'message': message, 'status': status_type, 'time': current_time_str, 'student_name': real_first_name}), 200 
 
     except Exception as e:
         db.rollback() 

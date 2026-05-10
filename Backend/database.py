@@ -172,6 +172,8 @@ def init_db(app):
             EXECUTE FUNCTION cascade_soft_delete_event();
         """)
 
+        cursor.execute("ALTER TABLE events ADD COLUMN IF NOT EXISTS attendance_mode TEXT DEFAULT 'IN';")
+
         db.commit() 
         cursor.close()
         print("PostgreSQL Database initialized.")

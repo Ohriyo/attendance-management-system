@@ -116,3 +116,24 @@ def modify_event(event_id):
             return jsonify({'message': str(e)}), 500
         finally:
             cursor.close()
+
+@events_bp.route('/api/events/<int:event_id>/mode', methods=['PUT'])
+def toggle_attendance_mode(event_id):
+    db = get_db_connection()
+    cursor = db.cursor()
+    data = request.get_json()
+    mode = data.get('mode') # Expecting 'IN' or 'OUT'
+
+    if mode not in ['IN', 'OUT']:
+        return jsonify({'message': 'Invalid mode specified.'}), 400
+
+    try:
+        cursor.execute("UPDATE events SET attendance_mode = %s WHERE id = %s", (mode, event_id))
+        log_action('Officer', 'TOGGLE_MODE', f"Changed event {event_id} mode to {mode}")
+        db.commit()
+        return jsonify({'message': f'System changed to Time {mode} mode.', 'mode': mode}), 200
+    except Exception as e:
+        db.rollback()
+        return jsonify({'message': str(e)}), 500
+    finally:
+        cursor.close()
