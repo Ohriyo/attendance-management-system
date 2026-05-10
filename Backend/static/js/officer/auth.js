@@ -2,7 +2,7 @@ import * as API from './api.js';
 
 export function forceLogout() {
     localStorage.clear();
-    window.location.replace('index.html'); // Overwrites history
+    window.location.replace('/'); // Overwrites history
 }
 
 export async function validateSession() {
