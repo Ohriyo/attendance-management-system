@@ -3,7 +3,6 @@ import * as API from './api.js';
 let currentEventId = 1;
 let systemActiveEventId = null; // NEW: Cache the live event ID here
 let systemCurrentMode = 'IN';
-let currentEventId = 1;
 
 export async function loadMonitoringView() {
     await fetchEventsForDropdown(); 
