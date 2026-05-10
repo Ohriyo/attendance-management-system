@@ -130,7 +130,7 @@ elements.attendanceForm.addEventListener('submit', async function(e) {
     }
     
     // --- Post Check-In Record ---
-const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem('auth_token');
     const user = JSON.parse(localStorage.getItem('user_info'));
 
     try {
@@ -143,19 +143,24 @@ const token = localStorage.getItem('auth_token');
         
         const data = await checkInResponse.json();
 
-        UI.showNotification(data.message, data.status || (checkInResponse.ok ? 'success' : 'error'));
-
-        // Handle specific critical edge cases using the old banner, if you still want it for system alerts
-        if (checkInResponse.status === 401) {
-            UI.displayMessage(`Session Expired: Please log in again to continue scanning.`, 'error');
-        } else if (checkInResponse.status === 409) {
-            UI.displayMessage(`${data.message}`, 'error');
+        if (checkInResponse.ok) {
+            // SUCCESS: Show the Green or Blue banners
+            if (data.status === 'in') {
+                UI.displayMessage(`TIME-IN SUCCESS! Welcome, ${studentInfo.first_name}. (${data.time})`, 'success');
+            } else if (data.status === 'out') {
+                UI.displayMessage(`TIME-OUT SUCCESS! Goodbye, ${studentInfo.first_name}. (${data.time})`, 'info'); 
+            }
+        } else {
+            // ERROR: Show the Red banner!
+            // This perfectly catches the 400 error from the backend when a student double-scans, 
+            // and uses the exact message the Python server sent (e.g., "Rio, you have already Timed IN...")
+            const errorMessage = data.message || `An error occurred (${checkInResponse.status})`;
+            UI.displayMessage(errorMessage, 'error');
         }
 
     } catch (error) {
         console.error("Error during check-in API call:", error);
-        // Changed to use the new toast for network errors as well for consistency
-        UI.showNotification(`Check-in failed: ${error.message || 'Server did not respond correctly.'}`, 'error');
+        UI.displayMessage(`Check-in failed: ${error.message || 'Server did not respond correctly.'}`, 'error');
         return;
     }
     
