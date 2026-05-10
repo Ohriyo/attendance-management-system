@@ -1,6 +1,9 @@
 import * as API from './api.js';
 
 let currentEventId = 1;
+let systemActiveEventId = null; // NEW: Cache the live event ID here
+let systemCurrentMode = 'IN';
+let currentEventId = 1;
 
 export async function loadMonitoringView() {
     await fetchEventsForDropdown(); 
@@ -36,45 +39,46 @@ export async function loadMonitoringView() {
         } catch(e) { console.error(e); }
     });
 
-    // --- NEW: Attendance Mode Toggle Logic (Method 3) ---
-    const modeToggleBtn = document.getElementById('attendance-mode-toggle');
+const modeToggleBtn = document.getElementById('attendance-mode-toggle');
     if (modeToggleBtn) {
-        // Clear old listeners to prevent duplicates during view swaps
         const newToggleBtn = modeToggleBtn.cloneNode(true);
         modeToggleBtn.parentNode.replaceChild(newToggleBtn, modeToggleBtn);
 
         newToggleBtn.addEventListener('click', async () => {
-            try {
-                // 1. Fetch the STRICT system-wide active event
-                const activeEventResponse = await API.fetchActiveEvent();
-                if (!activeEventResponse.ok) {
-                    alert("No active live event set! Please set a live event first before changing modes.");
-                    return;
-                }
-                
-                const activeEventData = await activeEventResponse.json();
-                const activeEventId = activeEventData.id;
-                
-                // 2. Determine the current mode from the database state
-                const currentMode = activeEventData.attendance_mode || 'IN';
-                const newMode = currentMode === 'IN' ? 'OUT' : 'IN';
+            // Guard: Make sure an event is active first
+            if (!systemActiveEventId) {
+                alert("No active live event set! Please set a live event first before changing modes.");
+                return;
+            }
 
-                // 3. Send update request to the backend
-                const updateResponse = await fetch(`/api/events/${activeEventId}/mode`, {
+            // 1. Determine new mode
+            const previousMode = systemCurrentMode;
+            const newMode = previousMode === 'IN' ? 'OUT' : 'IN';
+
+            // 2. OPTIMISTIC UPDATE: Move the UI instantly! No waiting.
+            updateToggleUI(newMode);
+            systemCurrentMode = newMode; 
+
+            // 3. Send update request to the backend in the background
+            try {
+                const updateResponse = await fetch(`/api/events/${systemActiveEventId}/mode`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mode: newMode })
                 });
 
-                if (updateResponse.ok) {
-                    // Update UI only on successful database update
-                    updateToggleUI(newMode);
-                } else {
-                    const err = await updateResponse.json();
-                    alert(`Failed to change mode: ${err.message}`);
+                if (!updateResponse.ok) {
+                    throw new Error("Server rejected the change.");
                 }
+                // If successful, do nothing! The UI is already correct.
+
             } catch (error) {
                 console.error("Error toggling mode:", error);
+                
+                // REVERT: If the server failed, snap the UI back and warn the user
+                updateToggleUI(previousMode);
+                systemCurrentMode = previousMode;
+                alert("Network error: Failed to change mode. Reverting to previous state.");
             }
         });
     }
@@ -232,12 +236,12 @@ async function checkActiveEventStatus() {
             const event = await response.json();
             document.getElementById('live-indicator').textContent = event.name;
             
-            // NEW: Sync the toggle switch UI with the actual database mode
-            if (event.attendance_mode) {
-                updateToggleUI(event.attendance_mode);
-            } else {
-                updateToggleUI('IN'); // Fallback default
-            }
+            // NEW: Cache the values so we don't have to fetch them again later
+            systemActiveEventId = event.id;
+            systemCurrentMode = event.attendance_mode || 'IN';
+
+            // Sync the UI
+            updateToggleUI(systemCurrentMode);
         }
     } catch(e) { console.error(e); }
 }
