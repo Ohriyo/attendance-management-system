@@ -130,7 +130,7 @@ elements.attendanceForm.addEventListener('submit', async function(e) {
     }
     
     // --- Post Check-In Record ---
-    const token = localStorage.getItem('auth_token');
+const token = localStorage.getItem('auth_token');
     const user = JSON.parse(localStorage.getItem('user_info'));
 
     try {
@@ -143,14 +143,10 @@ elements.attendanceForm.addEventListener('submit', async function(e) {
         
         const data = await checkInResponse.json();
 
-        if (checkInResponse.ok) {
-            if (data.status === 'in') {
-                UI.displayMessage(`TIME-IN SUCCESS! Welcome, ${studentInfo.first_name}. (${data.time})`, 'success');
-            } else if (data.status === 'out') {
-                UI.displayMessage(`TIME-OUT SUCCESS! Goodbye, ${studentInfo.first_name}. (${data.time})`, 'info'); 
-            }
-        } else if (checkInResponse.status === 401) {
-            // Handle revoked/expired sessions specifically
+        UI.showNotification(data.message, data.status || (checkInResponse.ok ? 'success' : 'error'));
+
+        // Handle specific critical edge cases using the old banner, if you still want it for system alerts
+        if (checkInResponse.status === 401) {
             UI.displayMessage(`Session Expired: Please log in again to continue scanning.`, 'error');
         } else if (checkInResponse.status === 409) {
             UI.displayMessage(`${data.message}`, 'error');
@@ -158,7 +154,8 @@ elements.attendanceForm.addEventListener('submit', async function(e) {
 
     } catch (error) {
         console.error("Error during check-in API call:", error);
-        UI.displayMessage(`Check-in failed: ${error.message || 'Server did not respond correctly.'}`, 'error');
+        // Changed to use the new toast for network errors as well for consistency
+        UI.showNotification(`Check-in failed: ${error.message || 'Server did not respond correctly.'}`, 'error');
         return;
     }
     

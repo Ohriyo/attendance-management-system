@@ -145,3 +145,58 @@ export function formatTo12Hour(timestampString) {
         timeZone: 'Asia/Manila' 
     });
 }
+
+export function showNotification(message, status = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    // Create the toast element
+    const toast = document.createElement('div');
+    
+    // Base styling: Modern, dark mode supported, rounded corners, subtle shadow
+    toast.className = `flex items-center w-full max-w-sm p-4 rounded-2xl shadow-lg border pointer-events-auto transform transition-all duration-300 translate-y-10 opacity-0 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700`;
+
+    // Determine colors and icons based on the status
+    let iconHTML = '';
+    if (status === 'error' || status === 'warning') {
+        // Yellow/Red accent for duplicate scans and errors
+        toast.classList.add('border-l-4', 'border-l-yellow-500', 'dark:border-l-yellow-400');
+        iconHTML = `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400">
+                        <i class="ph ph-warning-circle text-xl"></i>
+                    </div>`;
+    } else if (status === 'in' || status === 'out' || status === 'success') {
+        // Green accent for successful scans
+        toast.classList.add('border-l-4', 'border-l-green-500', 'dark:border-l-green-400');
+        iconHTML = `<div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+                        <i class="ph ph-check-circle text-xl"></i>
+                    </div>`;
+    }
+
+    toast.innerHTML = `
+        ${iconHTML}
+        <div class="ml-3 text-sm font-semibold text-gray-800 dark:text-white flex-1">
+            ${message}
+        </div>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-transparent text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white inline-flex items-center justify-center h-8 w-8 transition-colors" onclick="this.parentElement.remove()">
+            <span class="sr-only">Close</span>
+            <i class="ph ph-x text-lg"></i>
+        </button>
+    `;
+
+    // Add to container
+    container.appendChild(toast);
+
+    // Trigger animation (slide up and fade in)
+    requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-10', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+    });
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-10', 'opacity-0');
+        // Wait for animation to finish before removing from DOM
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+}
