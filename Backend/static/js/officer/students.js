@@ -38,7 +38,16 @@ export function loadStudentsView() {
         document.getElementById('success-modal').classList.add('hidden');
     });
 
-   const sectionFilter = document.getElementById('roster-filter-section');
+    const sectionFilter = document.getElementById('roster-filter-section');
+
+    // ---> NEW FIX: ADD EVENT LISTENER FOR THE SEARCH BAR <---
+    const searchInput = document.getElementById('roster-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            currentPage = 1; // Always reset to page 1 when searching
+            filterAndRenderStudents(); // Trigger your existing search logic
+        });
+    }
 
     // Trigger update whenever Program changes
     document.getElementById('roster-filter-program').addEventListener('change', () => { 
