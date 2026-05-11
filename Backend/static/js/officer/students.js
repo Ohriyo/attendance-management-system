@@ -42,11 +42,17 @@ export function loadStudentsView() {
 
     // ---> NEW FIX: ADD EVENT LISTENER FOR THE SEARCH BAR <---
     const searchInput = document.getElementById('roster-search');
+    
     if (searchInput) {
-        searchInput.addEventListener('input', () => {
-            currentPage = 1; // Always reset to page 1 when searching
-            filterAndRenderStudents(); // Trigger your existing search logic
+        console.log("Search bar found! Attaching listener."); // TEST 1
+        
+        searchInput.addEventListener('input', (e) => {
+            console.log("User typed:", e.target.value); // TEST 2
+            currentPage = 1; 
+            filterAndRenderStudents(); 
         });
+    } else {
+        console.error("CRITICAL: Search bar with ID 'roster-search' was not found in the DOM."); // TEST 3
     }
 
     // Trigger update whenever Program changes
