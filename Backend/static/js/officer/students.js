@@ -165,11 +165,12 @@ function filterAndRenderStudents() {
                               s.student_no.toLowerCase().includes(searchTerm);
         const matchesProgram = programFilter === 'All' || s.program === programFilter;
         const matchesYear = yearFilter === 'All' || s.year_level === yearFilter;
-        const matchesSection = sectionFilter === 'All' || s.section === sectionFilter; // New
+        const matchesSection = sectionFilter === 'All' || s.section === sectionFilter; 
         
-        return  matchesProgram && matchesYear && matchesSection;
+        // ADDED matchesSearch right here:
+        return matchesSearch && matchesProgram && matchesYear && matchesSection;
     });
-
+    
     filtered.sort((a, b) => {
         let valA = a[currentSort.field].toLowerCase();
         let valB = b[currentSort.field].toLowerCase();
